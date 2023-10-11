@@ -1,0 +1,45 @@
+"input[type=text], [type=date], select {" + "\r\n" + 
+"  width: 100%;" + "\r\n" + 
+"  padding: 12px 20px;" + "\r\n" + 
+"  margin: 8px 0;" + "\r\n" + 
+"  display: inline-block;" + "\r\n" + 
+"  border: 1px solid #ccc;" + "\r\n" + 
+"  border-radius: 4px;" + "\r\n" + 
+"  box-sizing: border-box;" + "\r\n" + 
+"}" + "\r\n" + 
+"" + "\r\n" + 
+".required-field {" + "\r\n" + 
+"  color: red;" + "\r\n" + 
+"}" + "\r\n" + 
+"" + "\r\n" + 
+".horizontal {" + "\r\n" + 
+"  width: 50%;" + "\r\n" + 
+"  padding: 10px;" + "\r\n" + 
+"}" + "\r\n" + 
+"" + "\r\n" + 
+".td-title {" + "\r\n" + 
+"  text-align: center;" + "\r\n" + 
+"  color: white;" + "\r\n" + 
+"  font-weight: bold;" + "\r\n" + 
+"  background-color: rgba(63, 122, 231, 0.863);" + "\r\n" + 
+"}" + "\r\n" + 
+"" + "\r\n" + 
+"th {" + "\r\n" + 
+"  background-color: rgb(170, 169, 169);" + "\r\n" + 
+"  font-weight: bold;" + "\r\n" + 
+"}" + "\r\n" + 
+"" + "\r\n" + 
+".td-content {" + "\r\n" + 
+"  text-align: left;" + "\r\n" + 
+"}" + "\r\n" + 
+"" + "\r\n" + 
+".delete, .heading {" + "\r\n" + 
+"  text-align: center;" + "\r\n" + 
+"  color: red;" + "\r\n" + 
+"}" + "\r\n" + 
+"" + "\r\n" + 
+".section p {" + "\r\n" + 
+"  background-color: rgb(206, 201, 201);" + "\r\n" + 
+"  padding: 10px;" + "\r\n" + 
+"  font-size: 18px;" + "\r\n" + 
+"}/*# sourceMappingURL=Gnyandipta_t.component.css.map */" 

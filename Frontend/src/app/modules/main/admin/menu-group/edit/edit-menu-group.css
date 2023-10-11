@@ -1,0 +1,46 @@
+.s-info-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.s-info-bar button {
+  outline: none;
+}
+
+.edit-pg {
+  width: 750px;
+}
+
+#lines table, #lines th, #lines td {
+  border: 0.5px solid #f1f0f0;
+  border-collapse: collapse;
+}
+#lines input, #lines input :focus {
+  outline: none;
+  border-width: 0px;
+  border: none;
+}
+
+.clr-input {
+  color: #212529;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 0.75rem 0.75rem;
+  margin-top: 3px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.center {
+  text-align: center;
+}
+
+.section {
+  background-color: #dddddd;
+  height: 40px;
+}
+
+.section p {
+  padding: 10px;
+  font-size: 18px;
+}/*# sourceMappingURL=edit-menu-group.css.map */

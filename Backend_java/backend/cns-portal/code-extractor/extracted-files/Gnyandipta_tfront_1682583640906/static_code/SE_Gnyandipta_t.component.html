@@ -1,0 +1,89 @@
+"<ol class=\"breadcrumb breadcrumb-arrow font-trirong\">" + "\r\n" + 
+"  <li><a href=\"javascript://\"> Gnyandipta_t</a></li>" + "\r\n" + 
+"</ol>" + "\r\n" + 
+"<div class=\"dg-wrapper\">" + "\r\n" + 
+"  <div class=\"clr-row\">" + "\r\n" + 
+"    <div class=\"clr-col-8\">" + "\r\n" + 
+"      <h3>list </h3>" + "\r\n" + 
+"    </div>" + "\r\n" + 
+"    <div class=\"clr-col-4\" style=\"text-align: right;\">" + "\r\n" + 
+"      <button id=\"add\" class=\"btn btn-primary\" (click)=\"goToAdd(product)\" >" + "\r\n" + 
+"        <clr-icon shape=\"plus\"></clr-icon>ADD" + "\r\n" + 
+"      </button>" + "\r\n" + 
+"    </div></div>" + "\r\n" + 
+"  <clr-datagrid [clrDgLoading]=\"loading\" [(clrDgSelected)]=\"selected\">" + "\r\n" + 
+"    <clr-dg-placeholder>user not found!</clr-dg-placeholder>" + "\r\n" + 
+"    <clr-dg-column [clrDgField]=\"'firstname'\"> <ng-container *clrDgHideableColumn=\"{hidden: false}\">" + "\r\n" + 
+"firstname" + "\r\n" + 
+"    </ng-container></clr-dg-column>" + "\r\n" + 
+"    <clr-dg-column [clrDgField]=\"'lastname'\"> <ng-container *clrDgHideableColumn=\"{hidden: false}\">" + "\r\n" + 
+"lastname" + "\r\n" + 
+"    </ng-container></clr-dg-column>" + "\r\n" + 
+"    <clr-dg-row *clrDgItems=\"let user of product\" [clrDgItem]=\"user\">" + "\r\n" + 
+"      <clr-dg-cell>{{user.firstname}}</clr-dg-cell>" + "\r\n" + 
+"      <clr-dg-cell>{{user.lastname}}</clr-dg-cell>" + "\r\n" + 
+"      <clr-dg-action-overflow>" + "\r\n" + 
+"        <button class=\"action-item\" (click)=\"onEdit(user)\">Edit</button>" + "\r\n" + 
+"        <button class=\"action-item\" (click)=\"onDelete(user)\">Delete</button>" + "\r\n" + 
+"      </clr-dg-action-overflow>" + "\r\n" + 
+"         </clr-dg-row>" + "\r\n" + 
+"    <clr-dg-footer>" + "\r\n" + 
+"      <clr-dg-pagination #pagination [clrDgPageSize]=\"10\">" + "\r\n" + 
+"        <clr-dg-page-size [clrPageSizeOptions]=\"[10,20,50,100]\">Users per page</clr-dg-page-size>" + "\r\n" + 
+"        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}" + "\r\n" + 
+"        of {{pagination.totalItems}} users" + "\r\n" + 
+"      </clr-dg-pagination>" + "\r\n" + 
+"    </clr-dg-footer>" + "\r\n" + 
+"  </clr-datagrid>" + "\r\n" + 
+"</div>" + "\r\n" + 
+"<clr-modal [(clrModalOpen)]=\"modalEdit\" [clrModalSize]=\"'lg'\" [clrModalStaticBackdrop]=\"true\">" + "\r\n" + 
+"  <h3 class=\"modal-title\">User Edit</h3>" + "\r\n" + 
+"  <div class=\"modal-body\" *ngIf=\"rowSelected.id\">" + "\r\n" + 
+"    <h2 class=\"heading\">{{rowSelected.id}}</h2>" + "\r\n" + 
+"    <form clrForm (ngSubmit)=\"onUpdate(rowSelected.id)\">" + "\r\n" + 
+"      <clr-input-container>" + "\r\n" + 
+"        <label>firstname<span class=\"required-field\">*</span></label>" + "\r\n" + 
+"        <input id=\"name\" clrInput type=\"text\" [(ngModel)]=\"rowSelected.firstname\" name=\"firstname\" />" + "\r\n" + 
+"      </clr-input-container>" + "\r\n" + 
+"      <clr-input-container>" + "\r\n" + 
+"        <label>lastname<span class=\"required-field\">*</span></label>" + "\r\n" + 
+"        <input id=\"name\" clrInput type=\"text\" [(ngModel)]=\"rowSelected.lastname\" name=\"lastname\" />" + "\r\n" + 
+"      </clr-input-container>" + "\r\n" + 
+"      <div class=\"modal-footer\">" + "\r\n" + 
+"      <button type=\"button\" class=\"btn btn-outline\" (click)=\"modalEdit = false\">Cancel</button>" + "\r\n" + 
+"      <button type=\"submit\" class=\"btn btn-primary\" >Update</button>" + "\r\n" + 
+"      </div>" + "\r\n" + 
+"    </form>" + "\r\n" + 
+"  </div>" + "\r\n" + 
+"</clr-modal>" + "\r\n" + 
+"<clr-modal [(clrModalOpen)]=\"modaldelete\" [clrModalSize]=\"'lg'\" [clrModalStaticBackdrop]=\"true\">" + "\r\n" + 
+"  <div class=\"modal-body\" *ngIf=\"rowSelected.id\">" + "\r\n" + 
+"    <h1 class=\"delete\">Are You Sure Want to delete?</h1>" + "\r\n" + 
+"    <h2 class=\"heading\">{{rowSelected.id}}</h2>" + "\r\n" + 
+"    <div class=\"modal-footer\">" + "\r\n" + 
+"      <button type=\"button\" class=\"btn btn-outline\" (click)=\"modaldelete = false\">Cancel</button>" + "\r\n" + 
+"    <button type=\"button\" (click)=\"delete(rowSelected.id)\" class=\"btn btn-primary\" >Delete</button>" + "\r\n" + 
+"    </div>" + "\r\n" + 
+"  </div>" + "\r\n" + 
+"</clr-modal>" + "\r\n" + 
+"<clr-modal [(clrModalOpen)]=\"modalAdd\" [clrModalSize]=\"'xl'\" [clrModalStaticBackdrop]=\"true\">" + "\r\n" + 
+"  <h3 class=\"modal-title\">ENTRY FORM</h3>" + "\r\n" + 
+"  <div class=\"modal-body\">" + "\r\n" + 
+"     <form [formGroup]=\"entryForm\" (ngSubmit)=\"onSubmit()\">" + "\r\n" + 
+"   <div class=\"clr-row\" style=\"height: fit-content;\">" + "\r\n" + 
+"      <div class=\"clr-col-md-3 clr-col-sm-12\" style=\"margin-bottom: 20px;\">" + "\r\n" + 
+"          <label> firstname:</label>" + "\r\n" + 
+"          <input type=\"text\" clrCheckbox formControlName=\"firstname\" />" + "\r\n" + 
+"        </div>" + "\r\n" + 
+"      <div class=\"clr-col-md-3 clr-col-sm-12\" style=\"margin-bottom: 20px;\">" + "\r\n" + 
+"          <label> lastname:</label>" + "\r\n" + 
+"          <input type=\"text\" clrCheckbox formControlName=\"lastname\" />" + "\r\n" + 
+"        </div>" + "\r\n" + 
+"      </div>" + "\r\n" + 
+" <div class=\"modal-footer\">" + "\r\n" + 
+"<button type=\"button\" class=\"btn btn-outline\" (click)=\"modalAdd = false\">Cancel</button>" + "\r\n" + 
+"        <button type=\"submit\" class=\"btn btn-primary\" >ADD</button>" + "\r\n" + 
+"        </div>" + "\r\n" + 
+"</form>" + "\r\n" + 
+"  </div>" + "\r\n" + 
+"</clr-modal>" 

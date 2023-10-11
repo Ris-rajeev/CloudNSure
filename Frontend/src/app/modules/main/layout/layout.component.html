@@ -1,0 +1,121 @@
+<clr-main-container>
+  <clr-header class="header-5">
+    <div class="branding">
+      <a href="javascript://" class="nav-link">
+        <a href="#" class="logo">
+          <img class="img" src="assets/images/icon/micrologo.png" alt="" height="50" width="50">
+        </a>
+        <div style="width:40px;margin-right:10px;">
+
+      </div>
+        <span class="title">cloudnSure</span>
+      </a>
+    </div>
+    <div class="header-nav" [clr-nav-level]="1">
+      <a href="javascript://" class="active nav-link nav-icon" routerLink="/cns-portal/dashboard">
+        <clr-icon shape="home"></clr-icon>
+      </a>
+    </div>
+
+
+
+
+
+
+
+    <div class="header-actions">
+      <!-- <span (click)="restartTour()" style="display: flex;align-items: center;margin-right: 20px;">
+        <clr-icon shape="play"></clr-icon>
+    </span> -->
+      <clr-dropdown>
+        <button class="nav-text demo-title" clrDropdownTrigger>
+          <clr-icon shape="user"></clr-icon><label style="line-height: 60px; cursor: pointer;"> {{userName}}</label>
+          <clr-icon shape="caret down"></clr-icon>
+        </button>
+        <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+          <a href="javascript://" clrDropdownItem routerLink="/cns-portal/about">About</a>
+          <a href="javascript://" clrDropdownItem routerLink="profile-settings">Profile Settings</a>
+          <a href="javascript://" clrDropdownItem routerLink="myworkspace">My Workspaces</a>
+          <a href="javascript://" clrDropdownItem routerLink="/cns-portal/passwordreset">Change Password</a>
+          <a href="javascript://" clrDropdownItem (click)="onLogout()">Log out</a>
+
+        </clr-dropdown-menu>
+      </clr-dropdown>
+    </div>
+  </clr-header>
+
+  <div class="content-container">
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+
+    <clr-vertical-nav  [clrVerticalNavCollapsible]="true" [(clrVerticalNavCollapsed)]="collapsed" [clr-nav-level]="2">
+
+      <div *ngFor="let menu of menus">
+        <!-- NEED MODIFICATION-->
+        <!-- <div *ngIf="menu.sub_menus.length >=1;then content else other_content"></div> -->
+        <div *ngIf="menu.subMenus !== null && menu.subMenus?.length >=1;then content else other_content"></div>
+        <ng-template #content>
+            <!-- if sub munu is present -->
+                <clr-vertical-nav-group routerLinkActive="active">
+                    <clr-icon [attr.shape]="menu.main_menu_icon_name" clrVerticalNavIcon></clr-icon>
+                    {{ menu.menuItemDesc }}
+                    <!-- SUB NAV-->
+                    <clr-vertical-nav-group-children *ngFor="let subnav of menu.subMenus">
+                        <a clrVerticalNavLink  *ngIf="subnav.mvisible == 'true'"   routerLinkActive="active" (click)="send(subnav)">
+                           <!-- <clr-icon [attr.shape]="subnav.mainMenuIconName" clrVerticalNavIcon></clr-icon>'./' + subnav.main_menu_action_name  (click)="send(subnav) [ngStyle]="subnav.mvisible == 'true' && { 'display': 'none' }"
+                          [routerLink]=subnav.mvisible == 'true' ? ['./' + subnav.main_menu_action_name] : []-->
+                          {{ subnav.menuItemDesc }}
+                        </a>
+                    </clr-vertical-nav-group-children>
+                </clr-vertical-nav-group>
+            <!-- </div> -->
+        </ng-template>
+        <ng-template #other_content>
+           <!-- if sub menu is not present -->
+            <a clrVerticalNavLink routerLinkActive="active" [routerLink]="'./'+ menu.main_menu_action_name">
+               <clr-icon [attr.shape]="menu.main_menu_icon_name" clrVerticalNavIcon></clr-icon>
+                {{ menu.menuItemDesc }}
+            </a>
+        </ng-template>
+    </div>
+
+
+
+    <!-- Master Menu -->
+
+
+
+     <!-- <a  clrVerticalNavLink routerLinkActive="active" >
+      <button id="add" class="btn btn-primary" style="width: 200px; position: fixed;bottom: 0; left: 0;" (click)="modaladd()">
+        <clr-icon shape="plus"></clr-icon>ADD A new Team
+      </button> </a> -->
+    </clr-vertical-nav>
+
+
+
+
+  </div>
+
+</clr-main-container>
+
+<clr-modal [(clrModalOpen)]="modalteam" [clrModalSize]="'lg'" [clrModalStaticBackdrop]="true">
+  <h5 class="modal-title">Add A Team To Real It Solutions</h5>
+  <div class="modal-body">
+    <form>
+      <div class="clr-row">
+        <div class="clr-col-md-6 clr-col-sm-12" >
+          <label>Name: </label>
+        <input class="clr-input"  type="text" name="name"  placeholder="Enter name">
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="modalteam = false">Cancel</button>
+      <button type="submit"  class="btn btn-primary" >Add</button>
+      </div>
+    </form>
+  </div>
+</clr-modal>
+
+<!-- <ngx-guided-tour></ngx-guided-tour> -->

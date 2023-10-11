@@ -1,0 +1,90 @@
+input[type=text], [type=date], [type=password], [type=checkbox] {
+  width: 100%;
+  padding: 15px 20px;
+  background-color: rgb(255, 255, 255);
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.required-field {
+  color: red;
+  font-size: 18px;
+}
+
+.td-title {
+  text-align: center;
+  width: 150px;
+  color: white;
+  font-weight: bold;
+  background-color: rgba(63, 122, 231, 0.863);
+}
+
+th {
+  font-weight: bold;
+}
+
+.td-content {
+  text-align: left;
+}
+
+.delete, .heading {
+  text-align: center;
+  color: red;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #0072a3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #0072a3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}/*# sourceMappingURL=menuaccesscontrol.component.css.map */

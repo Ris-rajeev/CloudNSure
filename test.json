@@ -1,0 +1,27 @@
+{
+  "operationStatus": "SUCCESS",
+  "operationMessage": "Login Success",
+  "item": {
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtb2hhc2luQGRla2F0Yy5jb20iLCJzY29wZXMiOiJST0xFX1Byb2plY3RNYW5hZ2VyLFJPTEVfRGV2ZWxvcGVyLFJPTEVfQURNSU4iLCJpYXQiOjE2OTY5MTUwNTgsImV4cCI6MTY5OTUwNzA1OH0.YbkLGp5xryLEHJmmTdu-EdU5t4MP6rlx7SBi-3UtBsE",
+    "userId": 10007479,
+    "fullname": "Mohasin",
+    "username": null,
+    "email": "mohasin@dekatc.com",
+    "firstName": "Mohasin",
+    "roles": ["ProjectManager", "Developer", "ROLE ADMIN"]
+  }
+}
+
+{
+    "operationStatus": "SUCCESS",
+    "operationMessage": "Login Success",
+    "item": {
+      "token": jsontoken,
+      "userId": results.user_id,
+      "fullname": results.full_name,
+      "username": results.user_name,
+      "email": results.email,
+      "firstName": results.full_name,
+      "roles": ["ProjectManager", "Developer", "ROLE ADMIN"],
+    },
+  }

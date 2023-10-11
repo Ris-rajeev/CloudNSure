@@ -1,0 +1,19 @@
+.s-info-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.s-info-bar button {
+  outline: none;
+}
+
+.read-only-pg {
+  width: 750px;
+}
+
+#build_btn {
+  position: absolute;
+  transition: 0.5s ease;
+  top: 404px;
+  left: 644px;
+}/*# sourceMappingURL=readonly-menu-group.css.map */

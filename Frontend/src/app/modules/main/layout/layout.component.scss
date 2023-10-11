@@ -1,0 +1,21 @@
+input[type=text],[type=date], select,textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.center-content {
+  //width: 100%;
+ // max-width: 800px;
+  margin: auto;
+  // padding: 0 15px;
+  // display: flex;
+  // flex-direction: row;
+  // align-items: center;
+  // justify-content: center;
+  // flex-wrap: wrap;
+  // text-align: center;
+}

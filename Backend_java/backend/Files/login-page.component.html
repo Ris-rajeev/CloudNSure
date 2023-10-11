@@ -1,0 +1,51 @@
+<div class="login-wrapper">
+  <form class="login">
+    <section class="title">
+      <h3 class="welcome">Welcome to</h3>
+      cloudnSure
+      <h5 class="hint">Use your  ID to sign in OR  <a routerLink="/create-account" class="signup">create one now </a> </h5>
+    </section>
+    <div class="login-group">
+
+      <clr-select-container>
+        <select clrSelect id="login-auth-source-1">
+          <option>CNS User</option>
+          <option>Code Extractor</option>
+        </select>
+      </clr-select-container>
+
+      <!-- <clr-input-container>
+        <input clrInput class="username" name="email" type="text" id="login_username" autocomplete="off" [(ngModel)]="model.email"
+          placeholder="NAME (SYSADMIN)">
+      </clr-input-container>
+
+      <clr-password-container>
+        <input clrPassword class="password" name="password" type="password" id="login_password" autocomplete="off" [(ngModel)]="model.password"
+          placeholder="Password (test1)">
+      </clr-password-container> -->
+      <clr-input-container>
+        <label class="clr-sr-only">Username</label>
+        <input type="text" name="username" clrInput autocomplete="off" [(ngModel)]="model.email"
+        placeholder="Username (SYSADMIN)"/>
+    </clr-input-container>
+    <clr-password-container>
+        <label class="clr-sr-only">Password</label>
+        <input type="password" name="password" clrPassword id="login_password" autocomplete="off" [(ngModel)]="model.password"
+        placeholder="Password (test1)"/>
+    </clr-password-container>
+      <clr-checkbox-wrapper>
+        <input clrCheckbox type="checkbox" id="rememberme">
+        <label for="rememberme"> Remember me </label>
+      </clr-checkbox-wrapper>
+
+      <div class="error active" *ngIf="isError">
+        Invalid user name or password
+      </div>
+      <button [disabled]="!model.email || !model.password" type="submit" class="btn btn-primary"
+        (click)="onLogin()">Login</button>
+      <!--<a href="javascript://" class="signup">Sign up for a Company ID</a>-->
+      <a (click)="goaccount()" class="signup">create account </a>
+        <a (click)="goforgotpass()" class="signup">forgot password </a>
+    </div>
+  </form>
+</div>
