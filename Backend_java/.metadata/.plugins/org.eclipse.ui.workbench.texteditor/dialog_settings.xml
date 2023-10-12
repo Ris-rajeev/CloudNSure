@@ -8,6 +8,7 @@
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="getUsrGrp"/>
 			<item value="/token/session"/>
 			<item value="api/getAllAppUser"/>
 			<item value="/api/getAllAppUser"/>

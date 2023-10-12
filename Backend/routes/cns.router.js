@@ -16,6 +16,8 @@ const {
   getUserMaintainence,
   getByIdUserMaintainence,
   createUserMaintainence,
+  loadMenuByUser,
+  userMenu,
 } = require("../api/cns.controller")
 
 const { checkToken } = require("../auth/token_validation")
@@ -46,5 +48,8 @@ router
   .get("/api/getAllAppUser", getUserMaintainence)
   .get("/api/getOneAppUser/:id", getByIdUserMaintainence)
   .post("/api/addOneAppUser", createUserMaintainence)
+
+router.get("/fndMenu/menuloadbyuser", loadMenuByUser)
+router.get("/api/realnet-menu/user-menu", userMenu)
 
 module.exports = router

@@ -1,11 +1,11 @@
 const mysql = require("mysql2")
 
 const pool = mysql.createConnection({
-  host: "localhost",
+  host: "realnet.cdtynkxfiu2h.ap-south-1.rds.amazonaws.com",
   port: "3306",
-  database: "test",
-  user: "root",
-  password: "password",
+  database: "realnet_CNSBENEW",
+  user: "cnsdev",
+  password: "cnsdev1234",
 })
 
 pool.connect(function (err) {
