@@ -16,7 +16,7 @@ node app.js
 
 ## Step - 3
 
-### Run the following script in your first terminal
+### Run the following script in your second terminal
 
 ```
 cd Frontend\src
@@ -26,7 +26,7 @@ npm start
 
 ## Step - 4
 
-### Run the following script in your first terminal
+### Run the following script in your third terminal
 
 ```
 cd Backend
