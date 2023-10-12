@@ -2,7 +2,7 @@
 
 ## Step - 1
 
-### clone this repo and open the folder in vscode or your preffered IDE
+### clone this repo and open the folder in vscode or your preffered IDE and open three terminals
 
 ## Step - 2
 
