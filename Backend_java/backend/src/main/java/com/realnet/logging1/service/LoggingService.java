@@ -27,9 +27,7 @@ import com.realnet.users.service1.AppUserServiceImpl;
 
 @Service
 public class LoggingService {
-//	private String	generate_log="N";
-//	private String user_log_file_nam="sysadmin2_5463783.log";
-//	private String log_level="debug";
+
 
 	private AppUserLogginRepository appUserLogginRepository;
 	private AppUserServiceImpl appUserServiceImpl;
@@ -43,9 +41,6 @@ public class LoggingService {
 
 	public AppUserLog generate(AppUser appUser) throws IOException {
 		long id = 1;
-//		AppUserLogCompositeKey key = new AppUserLogCompositeKey(appUser.getUserId(),id);
-//		AppUserLog log = appUserLogginRepository.findById(key).orElse(null);
-//		AppUserLog log = appUserLogginRepository.findByUserId(appUser.getUserId()).orElse(null);
 		List<AppUserLog> l = appUserLogginRepository.findByUserName(appUser.getUsername());
 		if (l.size() > 0) {
 			AppUserLog log = l.get(0);
@@ -69,9 +64,6 @@ public class LoggingService {
 	}
 
 	public AppUserLog add(AppUserLog appUserLog) {
-		// return appUserLogginRepository.save(appUserLog);
-//		return appUserLogginRepository.insertManual(appUserLog.getUserId().getUserId(),appUserLog.getLogId(), 
-//				appUserLog.getGenrateLog(), appUserLog.getLogFileName(),appUserLog.getLogLevel());
 		return appUserLogginRepository.save(appUserLog);
 	}
 
@@ -103,8 +95,6 @@ public class LoggingService {
 	public AppUserLog getOne(Long id) {
 		AppUser user = appUserServiceImpl.getById(id).orElse(null);
 		if (user != null) {
-//			long id1=1;
-//			AppUserLogCompositeKey key = new AppUserLogCompositeKey(user.getUserId(),id1);
 			List<AppUserLog> l = appUserLogginRepository.findByUserName(user.getUsername());
 			if (l.size() > 0) {
 				return l.get(0);

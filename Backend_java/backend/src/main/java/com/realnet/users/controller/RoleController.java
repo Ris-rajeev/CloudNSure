@@ -85,54 +85,6 @@ public class RoleController {
 
 	// ===================================
 
-//    @ApiOperation(value = "Assign roles to an user", response = ServiceResponse.class)
-//    @ApiResponses(value = {
-//        @ApiResponse(code = 200, message = "Roles successfully assigned to user!"), //response = UserResponse.class),
-//        @ApiResponse(code = 401, message = Constants.UNAUTHORIZED_MESSAGE), //response = BadRequestResponse.class),
-//        @ApiResponse(code = 403, message = Constants.FORBIDDEN_MESSAGE), //response = BadRequestResponse.class),
-//        @ApiResponse(code = 422, message = Constants.INVALID_DATA_MESSAGE) //, response = InvalidDataResponse.class),
-//    })
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    @PutMapping("/assign")
-//    public ResponseEntity<?> assignRoles(@Valid @RequestBody RoleUpdateDto roleUpdateDto) {
-//    	User user = userService.getById(roleUpdateDto.getUserId());
-//
-//        Arrays.stream(roleUpdateDto.getRoles()).forEach(role -> {
-//            Role roleObject = roleRepo.findByName(role);
-//            //if (roleObject != null && !user.hasRole(role)) {
-//                user.addRole(roleObject);
-//            }
-//        });
-//
-//        userService.update(user);
-//
-//        return ResponseEntity.ok().body(user);
-//    }
-//
-//    @ApiOperation(value = "Assign roles to an user", response = ServiceResponse.class)
-//    @ApiResponses(value = {
-//        @ApiResponse(code = 200, message = "Roles successfully assigned to user!"), // response = UserResponse.class),
-//        @ApiResponse(code = 401, message = Constants.UNAUTHORIZED_MESSAGE), // response = BadRequestResponse.class),
-//        @ApiResponse(code = 403, message = Constants.FORBIDDEN_MESSAGE), //response = BadRequestResponse.class),
-//        @ApiResponse(code = 422, message = Constants.INVALID_DATA_MESSAGE)//, response = InvalidDataResponse.class),
-//    })
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    @PutMapping("/revoke")
-//    public ResponseEntity revokeRoles(@Valid @RequestBody RoleUpdateDto roleUpdateDto) {
-//        User user = userService.findById(roleUpdateDto.getUserId());
-//
-//        Arrays.stream(roleUpdateDto.getRoles()).forEach(role -> {
-//            Role roleObject = roleService.findByName(role);
-//
-//            if (roleObject != null && user.hasRole(role)) {
-//                user.removeRole(roleObject);
-//            }
-//        });
-//
-//        userService.update(user);
-//
-//        return ResponseEntity.ok().body(user);
-//    }
-//}
+
 
 }

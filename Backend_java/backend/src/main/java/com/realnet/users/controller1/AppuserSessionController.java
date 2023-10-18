@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.realnet.SuReops.entity.FileDetails;
-import com.realnet.SuReops.entity.GetFile;
-import com.realnet.fnd.entity.Error;
-import com.realnet.fnd.entity.ErrorPojo;
+
 import com.realnet.users.entity1.AppUser;
 import com.realnet.users.entity1.AppUserSessions;
 import com.realnet.users.repository1.AppUserSessionsRepository;

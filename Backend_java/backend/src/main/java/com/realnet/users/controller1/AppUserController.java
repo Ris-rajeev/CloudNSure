@@ -1,8 +1,10 @@
 package com.realnet.users.controller1;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.realnet.config.EmailService;
 import com.realnet.userDTO.User;
 import com.realnet.users.entity.PasswordResetRequest;
+import com.realnet.users.entity.PasswordResetToken;
 import com.realnet.users.entity.Role;
 import com.realnet.users.entity1.AppUser;
 import com.realnet.users.entity1.AppUserDto;
@@ -115,11 +119,10 @@ public class AppUserController {
 		AppUser a = appUserServiceImpl.updateOneUser(appUser);
 		return new ResponseEntity<>(a, HttpStatus.OK);
 	}
-
 //   update app user
 	@PutMapping("/updateAppUserDto/{userId}")
-	public ResponseEntity<?> updateAppUser(@PathVariable Long userId, @RequestBody AppUserDto appUserDto) {
-		AppUser a = appUserServiceImpl.updateAppUserDto(userId, appUserDto);
+	public ResponseEntity<?> updateAppUser(@PathVariable Long userId,@RequestBody AppUserDto appUserDto) {
+		AppUser a = appUserServiceImpl.updateAppUserDto(userId,appUserDto);
 		if (a != null) {
 			return new ResponseEntity<>(a, HttpStatus.OK);
 		}
@@ -187,7 +190,7 @@ public class AppUserController {
 
 		if (a != null) {
 
-			if (signUp.getPassword().equals(signUp.getConfirm_password())) {
+			if (signUp.getPassword().equals(signUp.getConfirm_passwordS())) {
 
 				a.setFullName(signUp.getFirst_name() + " " + signUp.getLast_name());
 				a.setMob_no(signUp.getMob_no());
@@ -225,7 +228,8 @@ public class AppUserController {
 	// ADD GUEST VIA ADMIN
 	@ApiOperation(value = "Add user Via Admin")
 	@PostMapping("/guest_via_admin")
-	public ResponseEntity<?> guestviaadmin(HttpServletRequest request, @RequestParam("email") String email) {
+	public ResponseEntity<?> guestviaadmin(HttpServletRequest request, @RequestParam("email") String email,
+			@RequestParam("access_duration") Long access_duration) {
 
 		AppUser loggedInUser = userService.getLoggedInUser();
 		Long account_id = loggedInUser.getAccount().getAccount_id();
@@ -236,7 +240,7 @@ public class AppUserController {
 		} else {
 			String token = UUID.randomUUID().toString();
 			AppUser appUser = new AppUser();
-			userService.addguestviaadmin(appUser, token, email, account_id);
+			userService.addguestviaadmin(appUser, token, email, account_id, access_duration);
 
 			String subject = "add guest";
 			// String url = "http://localhost:4200/#/addguest/" +token;
@@ -257,7 +261,7 @@ public class AppUserController {
 
 		if (a != null) {
 
-			if (signUp.getPassword().equals(signUp.getConfirm_password())) {
+			if (signUp.getPassword().equals(signUp.getConfirm_passwordS())) {
 
 				a.setFullName(signUp.getFirst_name() + " " + signUp.getLast_name());
 				a.setMob_no(signUp.getMob_no());
@@ -317,8 +321,10 @@ public class AppUserController {
 		Optional<AppUser> r = appUserRepository.findById(user_id);
 		r.get().setActive(false);
 		AppUser save = appUserRepository.save(r.get());
+		
+			return new ResponseEntity<>(save, HttpStatus.OK);
 
-		return new ResponseEntity<>(save, HttpStatus.OK);
+		
 
 	}
 }

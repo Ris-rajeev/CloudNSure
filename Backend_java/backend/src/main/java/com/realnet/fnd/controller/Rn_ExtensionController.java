@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.realnet.FromExtensionJson.Entity.FromExtensionJson_t;
 import com.realnet.FromExtensionJson.Services.FromExtensionJson_Service;
-import com.realnet.comm.entity.Teacher;
 import com.realnet.exceptions.ResourceNotFoundException;
 import com.realnet.fnd.entity.Rn_Ext_Fields;
 import com.realnet.fnd.service.ExtFieldService;
@@ -67,7 +66,7 @@ public class Rn_ExtensionController {
 	}
 
 	// GET BY ID
-	@ApiOperation(value = "Get an Extension", response = Teacher.class)
+	@ApiOperation(value = "Get an Extension")
 	@GetMapping("/extension/{id}")
 	public ResponseEntity<Rn_Ext_Fields> getExtensionById(@PathVariable(value = "id") int id) {
 		Rn_Ext_Fields rn_ext_fields = extFieldService.getById(id);

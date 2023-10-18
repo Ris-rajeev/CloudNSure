@@ -53,12 +53,5 @@ public class Rn_Menu_Group_Line_Controller {
 		return ResponseEntity.ok(addToDb);
 	}
 	
-//	@GetMapping("/header/get-lines/{id}")
-//	public List<Rn_Menu_Group_Line> getLines(@PathVariable("id") int id){
-//		Rn_Menu_Group_Header header = new Rn_Menu_Group_Header();	
-//		header.setId(id);
-//		List<Rn_Menu_Group_Line> linesByHeader = this.rnGroupMenuLineServiec.getLinesByHeader(header);
-//		return linesByHeader;
-//	}
 	
 }

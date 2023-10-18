@@ -48,5 +48,9 @@
 		<item key="SmartImportRootWizardPage.STORE_CLOSE_IMPORTED" value="false"/>
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
+		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="D:\learn\Internship\Day-07\Backend_java"/>
+			<item value="D:\learn\Internship\Day-07\Backend_java\backend 2"/>
+		</list>
 	</section>
 </section>

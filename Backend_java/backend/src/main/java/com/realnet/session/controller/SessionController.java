@@ -14,9 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +22,6 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,7 +40,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -64,18 +60,12 @@ import com.realnet.users.entity.Sys_Accounts;
 
 import com.realnet.users.entity1.AppUser;
 import com.realnet.users.entity1.AppUserSessions;
-import com.realnet.users.entity1.Registration;
 import com.realnet.users.repository.CompanyRepo;
-import com.realnet.users.repository1.AppUserRepository;
 import com.realnet.users.repository1.AppUserSessionsRepository;
-import com.realnet.users.response.MessageResponse;
 import com.realnet.users.service.AboutWorkService;
 import com.realnet.users.service.CompanyService;
 import com.realnet.users.service1.AppUserService;
-import com.realnet.users.service1.AppUserServiceImpl;
 import com.realnet.users.service1.AppUserSessionsServiceImpl;
-import com.realnet.utils.Port_Constant;
-import com.realnet.webhook.Response.EntityResponse;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -102,46 +92,43 @@ public class SessionController {
 	private LoggingService loggingService;
 	@Autowired
 	private TokenProvider jwtTokenUtil;
-
-	@Autowired
-	private AppUserRepository appUserRepository;
-
-	@Autowired
-	private AppUserServiceImpl appUserServiceImpl;
-
+	
 	@Autowired
 	private AppUserSessionsRepository appUserSessionsRepository;
-
-	@Autowired
-	private AppUserServiceImpl userService;
+	
+	
+	
+	@Autowired(required=false)
+	private AppUserService userService;
 
 //	@Autowired
 //	private CompanyService companyService;
 
 	@Autowired
 	private EmailService emailService;
-
-	@Autowired
-	private JavaMailSender mailSender;
-
-	@Autowired
-	private AboutWorkService aboutworkservice;
-
-	@Autowired
-	private CompanyRepo sysrepo;
-
-	@Autowired
-	private BCryptPasswordEncoder bcryptEncoder;
-
-	@Autowired
-	private AppUserSessionsServiceImpl appUserSessionsServiceImpl;
-
+	
+	 @Autowired
+	    private JavaMailSender mailSender;
+	 
+	 @Autowired
+	 private AboutWorkService aboutworkservice;  
+	 
+	 @Autowired
+	 private CompanyRepo sysrepo;
+	 
+	 @Autowired
+	 private BCryptPasswordEncoder bcryptEncoder;
+	
+	 @Autowired
+	 private AppUserSessionsServiceImpl appUserSessionsServiceImpl;
+	
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Will return a security token, which must be passed in every request", response = SessionResponse.class) })
 	@RequestMapping(value = "/session", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public SessionResponse newSession(@RequestBody LoginUser loginRequest, HttpServletRequest request,
-			HttpSession session1) {
+	public SessionResponse newSession(@RequestBody LoginUser loginRequest,HttpServletRequest request,HttpSession session1) {
+
+
 
 		try {
 
@@ -154,9 +141,10 @@ public class SessionController {
 
 			System.out.println("authentication.getName() =>" + authentication.getName()); // email
 
+
+
 			AppUser loggedInUser = userService.getLoggedInUser();
-			MDC.put("USER", loggedInUser.getUsername());
-			// System.out.println("/session logged in user -> " + loggedInUser);
+			//System.out.println("/session logged in user -> " + loggedInUser);
 
 //			List<String> loggedInUserRoles = new ArrayList<String>();
 			StringBuilder roleString = new StringBuilder();
@@ -165,9 +153,9 @@ public class SessionController {
 ////				loggedInUserRoles.add(role.getName());
 //				roleString.append(role.getName() + ", ");
 //			});
-			// String role = roleString.toString().substring(0,
-			// roleString.toString().lastIndexOf(","));
-			// List<String> roleList = Arrays.asList(role.split("\\s*,\\s*"));
+			//String role = roleString.toString().substring(0, roleString.toString().lastIndexOf(","));
+			//List<String> roleList = Arrays.asList(role.split("\\s*,\\s*"));
+
 
 			SessionResponse resp = new SessionResponse();
 			SessionItem sessionItem = new SessionItem();
@@ -175,63 +163,63 @@ public class SessionController {
 			sessionItem.setUserId(loggedInUser.getUserId());
 			sessionItem.setFullname(loggedInUser.getFullName());
 			sessionItem.setFirstName(loggedInUser.getFullName());
-			// sessionItem.setUsername(loggedInUser.getUsername());
+			//sessionItem.setUsername(loggedInUser.getUsername());
 			sessionItem.setEmail(loggedInUser.getEmail());
 			// sessionItem.setRoles(roleList);
 			Set<Role> roles = loggedInUser.getRoles();
-			List<String> roleList = new ArrayList<>();
-			for (Role ro : roles) {
+			List<String> roleList= new ArrayList<>();
+			for(Role ro:roles) {
 				roleList.add(ro.getDescription());
 			}
 			sessionItem.setRoles(roleList);
-			// sessionItem.setRoles(loggedInUser.getUsrGrp().getGroupName());
+			//sessionItem.setRoles(loggedInUser.getUsrGrp().getGroupName());
 			resp.setOperationStatus(ResponseStatusEnum.SUCCESS);
 			resp.setOperationMessage("Login Success");
 			resp.setItem(sessionItem);
-
+			
 			InetAddress ip;
 			StringBuilder sb = new StringBuilder();
-			try {
-				ip = InetAddress.getLocalHost();
-				System.out.println("Current IP address : " + ip.getHostAddress());
-				NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-				byte[] mac = network.getHardwareAddress();
-				System.out.print("Current MAC address : ");
-
-				for (int i = 0; i < mac.length; i++) {
-					sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));
-				}
-				System.out.println(sb.toString());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
+		    try {
+		      ip = InetAddress.getLocalHost();
+		      System.out.println("Current IP address : " + ip.getHostAddress());
+		      NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+		      byte[] mac = network.getHardwareAddress();
+		      System.out.print("Current MAC address : ");
+		      
+		      for (int i = 0; i < mac.length; i++) {
+		        sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));
+		      }
+		      System.out.println(sb.toString());
+		    } catch (Exception e) {
+		      e.printStackTrace();
+		    }
+		    
 			AppUserSessions session = new AppUserSessions();
-
+			
 			session.setUserId(loggedInUser);
 			session.setLastAccessDate(new Date());
 			session.setLogintime(new Date());
 //			session.setLogouttime(new Date());
 			session.setSessionId(RequestContextHolder.currentRequestAttributes().getSessionId());
-			// String ip = request.getHeader("X-Forward-For");
-			// String ip = getClientIp();
-			// String ip = getClientIp(request);
-			String ip1 = request.getRemoteAddr();
+			//String ip =  request.getHeader("X-Forward-For");
+			//String ip = getClientIp();
+			//String ip = getClientIp(request);
+			String ip1 =request.getRemoteAddr();
 			session.setClientIp(ip1);
 			session.setMacid(sb.toString());
 			appUserSessionsServiceImpl.add(session);
-			AppUserLog s = loggingService.generate(loggedInUser);
-			// AppUserLog s = null;
-			if (s != null) {
-				session1.setAttribute("LogginLevel", s.getLogLevel());
-				session1.setAttribute("generate_log", s.getGenerateLog());
-				session1.setAttribute("LogFileName", s.getLogFileName());
-			} else {
-				session1.setAttribute("generate_log", "N");
+			AppUserLog s= loggingService.generate(loggedInUser);
+			//AppUserLog s = null;
+			if(s!=null) {
+				session1.setAttribute("LogginLevel",s.getLogLevel());
+				session1.setAttribute("generate_log",s.getGenerateLog());
+				session1.setAttribute("LogFileName",s.getLogFileName());
+			}else {
+				session1.setAttribute("generate_log","N");
 			}
 			return resp;
 		} catch (Exception e) {
-			LOGGER.error("Login Failed " + e.getMessage());
+			LOGGER.error("Login Failed "+e.getMessage());
 			System.out.print(e.getMessage());
 			SessionResponse resp = new SessionResponse();
 			resp.setOperationStatus(ResponseStatusEnum.ERROR);
@@ -240,11 +228,10 @@ public class SessionController {
 		}
 
 	}
-
-	// logout
-	@GetMapping("/logout")
-	public ResponseEntity<?> logoutUser(HttpSession session2) throws IOException {
-
+	//logout
+		@GetMapping("/logout")
+		public ResponseEntity<?> logoutUser(HttpSession session2) throws IOException{
+			
 //			if(session1.getAttribute("generate_log").equals("Y")) {
 //		    Path root = FileSystems.getDefault().getPath("").toAbsolutePath();
 //		    Path filePath = Paths.get(root.toString(),"logs",session1.getAttribute("LogFileName").toString());
@@ -253,30 +240,30 @@ public class SessionController {
 //				fw.write("Logout\n");
 //				fw.close();			
 //			}
-
-//			String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
-//			AppUserSessions session = appUserSessionsRepository.findBySessionId(session2.toString());
-//			session.setLogouttime(new Date());			
-//			appUserSessionsServiceImpl.add(session);
-		return new ResponseEntity<>("Logged out succesfully", HttpStatus.OK);
-	}
-	// logout
-
+			
+			String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
+			AppUserSessions session = appUserSessionsRepository.findBySessionId(session2.toString());
+			session.setLogouttime(new Date());			
+			appUserSessionsServiceImpl.add(session);
+			return new ResponseEntity<>("Logged out succesfully",HttpStatus.OK);
+		}
+	//logout
+	
 	public String getClientIp(HttpServletRequest request) {
-		final String LOCALHOST_IPV4 = "127.0.0.1";
-		final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
+		 final String LOCALHOST_IPV4 = "127.0.0.1";
+		 final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
 		String ipAddress = request.getHeader("X-Forwarded-For");
-		if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
+		if(StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getHeader("Proxy-Client-IP");
 		}
-
-		if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
+		
+		if(StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getHeader("WL-Proxy-Client-IP");
 		}
-
-		if (StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
+		
+		if(StringUtils.isEmpty(ipAddress) || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getRemoteAddr();
-			if (LOCALHOST_IPV4.equals(ipAddress) || LOCALHOST_IPV6.equals(ipAddress)) {
+			if(LOCALHOST_IPV4.equals(ipAddress) || LOCALHOST_IPV6.equals(ipAddress)) {
 				try {
 					InetAddress inetAddress = InetAddress.getLocalHost();
 					ipAddress = inetAddress.getHostAddress();
@@ -285,81 +272,14 @@ public class SessionController {
 				}
 			}
 		}
-
-		if (!StringUtils.isEmpty(ipAddress) && ipAddress.length() > 15 && ipAddress.indexOf(",") > 0) {
+		
+		if(!StringUtils.isEmpty(ipAddress) 
+				&& ipAddress.length() > 15
+				&& ipAddress.indexOf(",") > 0) {
 			ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
 		}
-
+		
 		return ipAddress;
-	}
-
-	@PostMapping("/addOneAppUser")
-	public ResponseEntity<?> addOneUser(@RequestBody Registration reg) {
-		System.out.println(reg);
-//		if (appUserRepository.findByEmail(reg.getEmail()) != null) {
-//			return ResponseEntity.badRequest().body(new MessageResponse("email already exist"));
-//		}
-		AppUser a = appUserServiceImpl.addOneUser(reg);
-		return new ResponseEntity<>(a, HttpStatus.OK);
-	}
-
-	@ApiOperation(value = "Send Email For OTP")
-	@PostMapping("/user/send_email")
-	public ResponseEntity<?> userviaadmin(HttpServletRequest request, @RequestBody Registration reg) {
-		Long account_id = reg.getAccount_id();
-		String email = reg.getEmail();
-
-		AppUser user = userService.findUserByEmail(email);
-		if (user != null) {
-			return ResponseEntity.badRequest().body(new MessageResponse(email + " already exist"));
-		} else {
-			Random random = new Random();
-			int otp = 100000 + random.nextInt(900000);
-			AppUser appUser = new AppUser();
-			userService.adduserviaadmin(appUser, String.valueOf(otp), email, account_id);
-
-			String subject = "Email Verification";
-			String url = String.valueOf(otp);
-			emailService.adduserviaadmin(email, subject, url);
-			return new ResponseEntity<>(new EntityResponse("Otp send successfully"), HttpStatus.OK);
-		}
-
-	}
-
-//	RESEND OTP
-	@PostMapping("/user/resend_otp")
-	public ResponseEntity<?> resendotp(@RequestParam String email) {
-
-		AppUser user = userService.findUserByEmail(email);
-		if (user == null) {
-			return ResponseEntity.badRequest().body(new MessageResponse(email + " not exist"));
-		} else {
-			Random random = new Random();
-			int otp = 100000 + random.nextInt(900000);
-			userService.resendotp(otp, email);
-			String subject = "Email Verification";
-			String url = String.valueOf(otp);
-			emailService.adduserviaadmin(email, subject, url);
-			return new ResponseEntity<>(new EntityResponse("resend Otp send successfully"), HttpStatus.OK);
-		}
-
-	}
-
-//	OTP VERIFICATION
-	@PostMapping("/user/otp_verification")
-	public ResponseEntity<?> otpverfication(@RequestParam String email, @RequestParam String otp) {
-
-		AppUser user = userService.findUserByEmail(email);
-		String random_no = user.getRandom_no();
-
-		if (random_no.equalsIgnoreCase(otp)) {
-			return new ResponseEntity<>(new EntityResponse("OTP Verified"), HttpStatus.OK);
-
-		} else {
-			return new ResponseEntity<>(new EntityResponse("Wrong OTP"), HttpStatus.BAD_REQUEST);
-
-		}
-
 	}
 //	public String getClientIp() {
 //		final String[] IP_HEADER_CANDIDATES = {
@@ -391,8 +311,7 @@ public class SessionController {
 //
 //	        return request.getRemoteAddr();
 //	}
-	// @ApiResponses(value = { @ApiResponse(code = 200, message = "email
-	// varification") })
+	//@ApiResponses(value = { @ApiResponse(code = 200, message = "email varification") })
 ///	@RequestMapping(value = "/email-exists", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 //	public ResponseEntity<?> emailExistCheck(@RequestBody EmailRequest emailReq) {
 //		boolean exists = userService.existsByEmail(emailReq.getEmail());
@@ -457,6 +376,9 @@ public class SessionController {
 //		}
 //	}
 
+	
+	
+	
 //	@ApiOperation(value = "Add new Company", response = OperationResponse.class)
 //	@RequestMapping(value = "/company-registration", method = RequestMethod.POST, produces = { "application/json" })
 //	public ResponseEntity<?> addNewCompany(@RequestBody CompanyDto company) {
@@ -473,30 +395,34 @@ public class SessionController {
 //			// return ResponseEntity.ok(res);
 //			return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 //		}
-
+		
 //}
-
-	@ApiOperation(value = "Add new cluodnsure", response = OperationResponse.class)
-	@PostMapping("/aboutwork")
-	public AppUser addNewCustomer(@RequestBody AboutWork aboutWork) {
-
-		System.out.println("about work controller started");
-
-		// save acccount info
-		AboutWork about = aboutworkservice.adddata(aboutWork);
-		Sys_Accounts sys = new Sys_Accounts();
-		sys.setAccount_id(about.getId());
-		sysrepo.save(sys);
-
-		// save user with accout id
-		AppUser user = new AppUser();
-		user.setChangePassw(aboutWork.getPassword());
-		user.setEmail(aboutWork.getEmail());
-		user.setMob_no(aboutWork.getMobile());
-		AppUser userResister = userService.userResister(user, about.getId());
-		return userResister;
-	}
-
+	
+	
+		@ApiOperation(value = "Add new cluodnsure", response = OperationResponse.class)
+		@PostMapping("/aboutwork")
+		public AppUser addNewCustomer(@RequestBody AboutWork aboutWork) {
+		
+			System.out.println("about work controller started");
+		
+			// save acccount info
+			AboutWork about = aboutworkservice.adddata(aboutWork);
+			Sys_Accounts sys = new Sys_Accounts();
+			sys.setAccount_id(about.getId());
+			sysrepo.save(sys);
+		
+			// save user with accout id
+			AppUser user = new AppUser();
+			user.setChangePassw(aboutWork.getPassword());
+			user.setEmail(aboutWork.getEmail());
+			user.setMob_no(aboutWork.getMobile());
+			AppUser userResister = userService.userResister(user, about.getId());
+			return userResister;
+		}
+	 
+	 
+	
+	 
 //		@ApiOperation(value = "Update about ", response = User.class)
 //		@PutMapping("/aboutwork/{id}")
 //		public User updateUser(@PathVariable(value = "id") Long id, @Valid @RequestBody AboutWork aboutWork) {
@@ -505,7 +431,7 @@ public class SessionController {
 //			AboutWork aw = aboutworkservice.updateById(updateabout.getSys_account().getId(), aboutWork);
 //			return updateabout;
 //		}
-
+		
 //		@ApiOperation(value = "Update about ", response = User.class)
 //		@PutMapping("/aboutwork2/{id}")
 //		public User updateUser2(@PathVariable(value = "id") Long id, @Valid @RequestBody AboutWork aboutWork) {
@@ -520,7 +446,12 @@ public class SessionController {
 //			AboutWork aw = aboutworkservice.updateById2(updateabout.getSys_account().getId(), aboutWork);
 //			return updateabout;
 //		}
-
+	 
+	 
+	 
+	 
+	 
+	 
 //	 @ApiOperation(value = "Update about ", response = User.class)
 //		@PutMapping("/aboutwork_working/{id}")
 //		public ResponseEntity<?> updateByIdWorkingId(@PathVariable(value = "id") Long id, @Valid @RequestBody AboutWork aboutWork) {
@@ -538,7 +469,7 @@ public class SessionController {
 //		 
 //		 return ResponseEntity.status(HttpStatus.ACCEPTED).body(updateabout);
 //	}
-
+	 
 //	 @ApiOperation(value = "Update about ", response = User.class)
 //		@PutMapping("/aboutwork_managing/{id}")
 //		public ResponseEntity<?> updateByMangingWork(@PathVariable(value = "id") Long id, @Valid @RequestBody AboutWork aboutWork) {
@@ -549,7 +480,7 @@ public class SessionController {
 //		 return null;
 //	}
 //	 
-
+	 
 //	    @ApiOperation(value = "Add new cluodnsure", response = OperationResponse.class)
 //	    @PostMapping("/addemails/{id}")
 //	    public   User addNewEmails(@PathVariable(value = "id") Long id,@RequestBody Email email) {
@@ -687,7 +618,8 @@ public class SessionController {
 //
 //	
 //	    }
-
+	    
+	    
 //	    @GetMapping("userid/{id}/{checknumber}")
 //		public ResponseEntity<?> addRole(@PathVariable("id") Long id, @PathVariable("checknumber") Long checknumber) {
 //			
@@ -701,14 +633,18 @@ public class SessionController {
 //			
 //	    	return ResponseEntity.ok(user);
 //		}
-
-	// latest
+	    
+	    //latest
 //	    @GetMapping("userid/{id}/{checknumber}")
 //		public User addRole(@PathVariable("id") Long id, @PathVariable("checknumber") Long checknumber) {
 //			User user=userService.exitbychecknumber(id, checknumber);
 //	        return user;
 //		}
 
+	 
+	 
+	 
+	 
 //	 
 //	//save data
 //			@ApiOperation(value = "Add A New emails", response = User.class)
@@ -721,7 +657,8 @@ public class SessionController {
 //				List<AboutWork> savedRn_Forms_Setup =userService .save(about);
 //				return ResponseEntity.status(HttpStatus.CREATED).body(savedRn_Forms_Setup);
 //			}
-
+	 
+	 
 //	 @ApiOperation(value = "Add new cluodnsure", response = OperationResponse.class)
 //	    @PostMapping("/aboutwork")
 //	    public User  addNewEmails(@RequestBody AboutWork aboutWork) {
@@ -749,7 +686,9 @@ public class SessionController {
 ////		User userResister = userService.userResister(user,id1);
 //			return userResister;
 //	    }
-
+	 
+	 
+	 
 //	 @ApiOperation(value = "Update about ", response = User.class)
 //		@PutMapping("/aboutwork/{acc_id}")
 //		public ResponseEntity<?> updateUser(@PathVariable(value = "acc_id") Long acc_id, @Valid @RequestBody AboutWork aboutWork) {
@@ -761,6 +700,7 @@ public class SessionController {
 //			
 //		}
 //	 
+	
 
 // ===============================================================
 //	  @PostMapping(value = "/forgot-password")

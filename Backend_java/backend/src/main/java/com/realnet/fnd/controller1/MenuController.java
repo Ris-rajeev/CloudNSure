@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +42,17 @@ import io.swagger.annotations.Api;
 
 public class MenuController {
 	@Autowired
+	private AppUserServiceImpl userService;
+
+	@Autowired
 	private AppUserRoleRepository appUserRoleRepository;
 
+	@Autowired
+	private AppUserRepository appUserRepository;
+
+	private MenuDetServiceImpl menuDetServiceImpl;
+	private GrpMenuAccessServiceImpl grpMenuAccessServiceImpl;
+	private AppUserServiceImpl appUserServiceImpl;
 	private MenuDetRepository menuDetRepository;
 	private GrpMenuAccessRepository grpMenuAccessRepository;
 
@@ -53,6 +61,9 @@ public class MenuController {
 			AppUserServiceImpl appUserServiceImpl, MenuDetRepository menuDetRepository,
 			GrpMenuAccessRepository grpMenuAccessRepository) {
 		super();
+		this.menuDetServiceImpl = menuDetServiceImpl;
+		this.grpMenuAccessServiceImpl = grpMenuAccessServiceImpl;
+		this.appUserServiceImpl = appUserServiceImpl;
 		this.menuDetRepository = menuDetRepository;
 		this.grpMenuAccessRepository = grpMenuAccessRepository;
 	}
@@ -158,15 +169,15 @@ public class MenuController {
 	}
 
 //	 delete DATA SEC MENU DET WITH GRPMENUACCESS by menuItemId
-	@PreAuthorize("hasAnyRole('SYSADMIN','ProjectManager')")
 	@DeleteMapping("/menu/{menu_item_id}")
 	public void delete(@PathVariable Long menu_item_id) {
-
+		
+		
 		List<GrpMenuAccess> findlist = grpMenuAccessRepository.findlist(menu_item_id);
-		for (GrpMenuAccess g : findlist) {
-			grpMenuAccessRepository.delete(g);
+		for(GrpMenuAccess g:findlist) {
+			grpMenuAccessRepository.delete(g);	
 		}
-
+	
 		MenuDet menu = menuDetRepository.findById(menu_item_id).orElseThrow(null);
 		menuDetRepository.delete(menu);
 	}
@@ -319,6 +330,7 @@ public class MenuController {
 				g.setIsdisable("true");
 				g.setMexport("true");
 
+
 				g.setCreatedAt(new Date());
 				g.setUpdatedAt(new Date());
 
@@ -364,7 +376,7 @@ public class MenuController {
 		g1.setModuleName(grpMenuAccess.getModuleName());
 		g1.setStatus(grpMenuAccess.getStatus());
 		g1.setMexport(grpMenuAccess.getMexport());
-
+		
 		GrpMenuAccess grpMenuAccess2 = grpMenuAccessRepository.save(g1);
 		return new ResponseEntity<>(grpMenuAccess2, HttpStatus.OK);
 	}
@@ -377,506 +389,15 @@ public class MenuController {
 			throw new ResourceNotFoundException("no resource found");
 		grpMenuAccessRepository.delete(grpMenuAccess);
 	}
-
+	
 //	GET GRPMENU ACCESS BY MENUITEM ID BUT NOT WORKING WITH SUBMENU
 	@GetMapping("/getsec/{menu_item_id}")
 	public ResponseEntity<?> getgrpmenuaccess(@PathVariable Long menu_item_id) {
 		GrpMenuAccess get = grpMenuAccessRepository.findById1(menu_item_id);
-
+				
 		return new ResponseEntity<>(get, HttpStatus.CREATED);
 	}
 
-//			 @GetMapping("/categories")
-////	    @Transactional(readOnly = true)
-//	    public List<MenuDet> getCategories() {
-//	        List<MenuDet> rootCategories = menuDetRepository.findAllRoots(); // first db call
-//
-//
-//	        // Now Find all the subcategories
-//	        List<Long> rootCategoryIds = rootCategories.stream().map(MenuDet::getMenuItemId).collect(Collectors.toList());
-//	        List<MenuDet> subCategories = menuDetRepository.findAllSubCategoriesInRoot(rootCategoryIds); // second db call
-//
-//	        subCategories.forEach(subCategory -> {
-//	            subCategory.getParentMenudet().getSubMenus().add(subCategory); // no further db call, because everyone inside the root is in the persistence context.
-//	        });
-//
-//	        return rootCategories;
-//	    }	
 
-//			 
-	// GET GROUP MENU ACCESS BY USR_GROUP with WITH SUBMENU
-//			 
-//			 @GetMapping("/grpmenuaccess/{usr_grp}")
-//			 public ResponseEntity<?> GETGROUPMENU( @PathVariable Long usr_grp
-//					){
-//				 
-//				 List<Object> list = new ArrayList<>();
-//				 GrpMenuAccess grp = grpMenuAccessRepository.findByUsrGrp(usr_grp);
-////					ArrayList<CreateMenuDetDto> dd = new ArrayList<CreateMenuDetDto>();
-//					
-////					for(CreateMenuDetDto dto:dd) {
-	////
-//////				  CreateMenuDetDto dto = new CreateMenuDetDto();
-////				  dto.setCreateby(grp.getCreateby());
-////				  dto.setMCreate(grp.getMCreate());
-////				  dto.setMDelete(grp.getMDelete());
-////				  dto.setMEdit(grp.getMEdit());
-////				  dto.setMQuery(grp.getMQuery());
-////				  dto.setMVisible(grp.getMVisible());
-////				  dto.setMenuItemId(grp.getMenuItemId());
-////				  List<MenuDet> sub = menuDetRepository.findAllSubmenuByMenuId(grp.getMenuItemId().getMenuItemId());
-//				  List<MenuDet> sub = menuDetRepository.findAllSubmenuforusrgrp(grp.getMenuItemId().getMenuItemId());	
-//				  
-////				  for(MenuDet m: sub) {
-////					  dto.setItemSeq(m.getItemSeq());
-////					  dto.setMenuId(m.getMenuId());
-////					  dto.setMenu_item_id(m.getMenuItemId());
-////					  dto.setMenuItemDesc(m.getMenuItemDesc());
-////					  dto.setModuleName(m.getModuleName());
-////					  dto.setStatus(m.getStatus());
-////					  dd.add(dto);
-////					  }  
-////					}
-//				  list.add(grp);
-//				  list.add(sub);
-//				  return new ResponseEntity<>(list, HttpStatus.OK);  	  	  
-//				  
-//			 }
-
-//			get by usrgrp
-
-//			@GetMapping("/get/{usr_grp}")
-//
-//			public ResponseEntity<?> getGrp(@PathVariable Long usr_grp) {
-//				GrpMenuAccess grp = grpMenuAccessRepository.findByUsrGrp(usr_grp);
-//				if (grp == null)
-//					throw new ResourceNotFoundException(" resource not found");
-//				
-//				MenuDet menuDet = grp.getMenuItemId();
-//				
-//				List<MenuDet> list = menuDetRepository.findAllSubmenuByMenuId(menuDet.getMenuItemId());
-//				grp.setMenu(list);
-//				return new ResponseEntity<>(grp, HttpStatus.OK);
-//			}		
-
-//			@GetMapping("/allMenuDet")
-//			public ResponseEntity<?> getAllMenuDet(){
-//				//List<MenuDet> l = menuDetServiceImpl.getAll();
-//				List<Object> l =menuDetServiceImpl.getAllObject( PageRequest.of(0,5));
-//				List<MixMenu> m = new ArrayList<MixMenu>();
-//				for(Object o:l) {
-//					Object[] e = (Object[]) o;	
-//					MixMenu p = new MixMenu();
-//					p.setMenuItemId( (BigInteger) e[0]);
-//					p.setMenuItemDesc((String) e[1]);
-//					p.setMenuId((BigInteger) e[2]);
-//					p.setMCreate((String) e[3]);
-//					p.setMVisible((String) e[4]);
-//					p.setMEdit((String) e[5]);
-//					p.setMQuery((String) e[6]);
-//					p.setMDelete((String) e[7]);
-//					m.add(p);
-//				}
-//				return new ResponseEntity<>(m,HttpStatus.OK);
-//			}
-//			@GetMapping("/getByMenuId/{usrGrp}/{menuId}")
-//			public ResponseEntity<?> getOne(@PathVariable("usrGrp") Long usrGrp,@PathVariable("menuId") Long menuId){
-//				List<Object> l =menuDetServiceImpl.getAllObject( PageRequest.of(0,5));
-//				List<MixMenu> m = new ArrayList<MixMenu>();
-//				for(Object o:l) {
-//					Object[] e = (Object[]) o;	
-//					MixMenu p = new MixMenu();
-//					p.setMenuItemId( (BigInteger) e[0]);
-//					p.setMenuItemDesc((String) e[1]);
-//					p.setMenuId((BigInteger) e[2]);
-//					p.setMCreate((String) e[3]);
-//					p.setMVisible((String) e[4]);
-//					p.setMEdit((String) e[5]);
-//					p.setMQuery((String) e[6]);
-//					p.setMDelete((String) e[7]);
-//					m.add(p);
-//				}
-//				return new ResponseEntity<>(m,HttpStatus.OK);
-//			}
-	//
-//			@GetMapping("/allGrpMenu")
-//			public ResponseEntity<?> getAllGrpMenu(){
-//				Pageable page = PageRequest.of(0,5);
-//				List<GrpMenuAccess> l = grpMenuAccessServiceImpl.getAll(page);
-//				return new ResponseEntity<>(l,HttpStatus.OK);
-//			}
-	//
-//			@GetMapping("/getByUserId")
-//			public ResponseEntity<?> getByUserId(){
-//				AppUserRole role = appUserServiceImpl.getLoggedInUser().getUsrGrp();
-//				List<Object> l =menuDetServiceImpl.getByUserId(role.getUsrGrp(),(long) 0);
-//				List<MixMenu> m = new ArrayList<MixMenu>();
-//				for(Object o:l) {
-//					Object[] e = (Object[]) o;	
-//					MixMenu p = new MixMenu();
-//					p.setMenuItemId( (BigInteger) e[0]);
-//					List<Object> l1 =menuDetServiceImpl.getByUserId(role.getUsrGrp(),p.getMenuItemId().longValue());
-//					List<MixMenu> m1 = new ArrayList<MixMenu>();
-//					for(Object o1: l1) {
-//						Object[] e1 = (Object[]) o1;
-//						MixMenu p1 = new MixMenu();
-//						p1.setMenuItemId( (BigInteger) e1[0]);
-//						p1.setMenuItemDesc((String) e1[1]);
-//						p1.setMenuId((BigInteger) e1[2]);
-//						p1.setMCreate((String) e1[3]);
-//						p1.setMVisible((String) e1[4]);
-//						p1.setMEdit((String) e1[5]);
-//						p1.setMQuery((String) e1[6]);
-//						p1.setMDelete((String) e1[7]);
-//						p1.setMainMenuActionName((String) e1[8]);
-//						p1.setMainMenuIconName((String) e1[9]);
-//						m1.add(p1);
-//					}
-//					p.setMenuItemDesc((String) e[1]);
-//					p.setMenuId((BigInteger) e[2]);
-//					p.setMCreate((String) e[3]);
-//					p.setMVisible((String) e[4]);
-//					p.setMEdit((String) e[5]);
-//					p.setMQuery((String) e[6]);
-//					p.setMDelete((String) e[7]);
-//					p.setMainMenuActionName((String) e[8]);
-//					p.setMainMenuIconName((String) e[9]);
-//					p.setSubMenus(m1);
-//					m.add(p);
-//				}
-//				return new ResponseEntity<>(m,HttpStatus.OK);
-//			}
-
-//			GET MENU AND SUBMENU
-//			@GetMapping("/Load_Menu")
-//			public ResponseEntity<?> loadmenu(){
-//				List<Object> list = new ArrayList<>();
-////				 Map<K, V> coordinates = new HashMap<>();
-//				List<Object> e1 = menuDetRepository.findEqual100();
-//				List<Object> e11 = menuDetRepository.findGreater100();
-//				List<Object> e2 = menuDetRepository.findEqual200();
-//				List<Object> e22 = menuDetRepository.findGreater200();
-//				List<Object> e3 = menuDetRepository.findEqual300();
-//				List<Object> e33 = menuDetRepository.findGreater300();
-//				List<Object> e4 = menuDetRepository.findEqual400();
-//				List<Object> e44 = menuDetRepository.findGreater400();
-//				List<Object> Li = menuDetRepository.findEqual500();
-//				List<Object> Gr = menuDetRepository.findGreater500();
-//				List<Object> e6 = menuDetRepository.findEqual600();
-//				List<Object> e66 = menuDetRepository.findGreater600();
-//				
-//				//FOR menu and submenu of menu id 100
-//				List<MixMenu> a11 = new ArrayList<MixMenu>();//For submenu of 100
-//				for(Object o:e11) {
-//					Object[] e = (Object[]) o;	
-//					MixMenu p = new MixMenu();
-//					p.setMenuItemId( (BigInteger) e[0]);
-//					p.setMenuItemDesc((String) e[1]);
-//					p.setMenuId((BigInteger) e[2]);
-//					p.setMCreate((String) e[3]);
-//					p.setMVisible((String) e[4]);
-//					p.setMEdit((String) e[5]);
-//					p.setMQuery((String) e[6]);
-//					p.setMDelete((String) e[7]);
-//					p.setMainMenuActionName((String) e[8]);
-//					p.setMainMenuIconName((String) e[9]);
-//					a11.add(p);
-//				}
-	//
-//					List<MixMenu> a1 = new ArrayList<MixMenu>();// for menu of 100
-//					for(Object o:e1) {
-//						Object[] e = (Object[]) o;	
-//						MixMenu p = new MixMenu();
-//						p.setMenuItemId( (BigInteger) e[0]);
-//						p.setMenuItemDesc((String) e[1]);
-//						p.setMenuId((BigInteger) e[2]);
-//						p.setMCreate((String) e[3]);
-//						p.setMVisible((String) e[4]);
-//						p.setMEdit((String) e[5]);
-//						p.setMQuery((String) e[6]);
-//						p.setMDelete((String) e[7]);
-//						p.setMainMenuActionName((String) e[8]);
-//						p.setMainMenuIconName((String) e[9]);
-//						p.setSubMenus(a11);
-//						a1.add(p);
-//					}
-//				
-//				
-	//
-//				
-////					FOR menu and submenu of menu id 200
-//				List<MixMenu> a22 = new ArrayList<MixMenu>();//For submenu of 200
-//				for(Object o:e22) {
-//					Object[] e = (Object[]) o;	
-//					MixMenu p = new MixMenu();
-//					p.setMenuItemId( (BigInteger) e[0]);
-//					p.setMenuItemDesc((String) e[1]);
-//					p.setMenuId((BigInteger) e[2]);
-//					p.setMCreate((String) e[3]);
-//					p.setMVisible((String) e[4]);
-//					p.setMEdit((String) e[5]);
-//					p.setMQuery((String) e[6]);
-//					p.setMDelete((String) e[7]);
-//					p.setMainMenuActionName((String) e[8]);
-//					p.setMainMenuIconName((String) e[9]);
-//					a22.add(p);
-//				}
-	//
-//					List<MixMenu> a2 = new ArrayList<MixMenu>();// for menu of 200
-//					for(Object o:e2) {
-//						Object[] e = (Object[]) o;	
-//						MixMenu p = new MixMenu();
-//						p.setMenuItemId( (BigInteger) e[0]);
-//						p.setMenuItemDesc((String) e[1]);
-//						p.setMenuId((BigInteger) e[2]);
-//						p.setMCreate((String) e[3]);
-//						p.setMVisible((String) e[4]);
-//						p.setMEdit((String) e[5]);
-//						p.setMQuery((String) e[6]);
-//						p.setMDelete((String) e[7]);
-//						p.setMainMenuActionName((String) e[8]);
-//						p.setMainMenuIconName((String) e[9]);
-//						p.setSubMenus(a22);
-//						a2.add(p);
-//					}
-	//
-////					FOR menu and submenu of menu id 300
-//				List<MixMenu> a33 = new ArrayList<MixMenu>();//For submenu of 300
-//				for(Object o:e33) {
-//					Object[] e = (Object[]) o;	
-//					MixMenu p = new MixMenu();
-//					p.setMenuItemId( (BigInteger) e[0]);
-//					p.setMenuItemDesc((String) e[1]);
-//					p.setMenuId((BigInteger) e[2]);
-//					p.setMCreate((String) e[3]);
-//					p.setMVisible((String) e[4]);
-//					p.setMEdit((String) e[5]);
-//					p.setMQuery((String) e[6]);
-//					p.setMDelete((String) e[7]);
-//					p.setMainMenuActionName((String) e[8]);
-//					p.setMainMenuIconName((String) e[9]);
-//					a33.add(p);
-//				}
-	//
-//					List<MixMenu> a3 = new ArrayList<MixMenu>();// for menu of 300
-//					for(Object o:e3) {
-//						Object[] e = (Object[]) o;	
-//						MixMenu p = new MixMenu();
-//						p.setMenuItemId( (BigInteger) e[0]);
-//						p.setMenuItemDesc((String) e[1]);
-//						p.setMenuId((BigInteger) e[2]);
-//						p.setMCreate((String) e[3]);
-//						p.setMVisible((String) e[4]);
-//						p.setMEdit((String) e[5]);
-//						p.setMQuery((String) e[6]);
-//						p.setMDelete((String) e[7]);
-//						p.setMainMenuActionName((String) e[8]);
-//						p.setMainMenuIconName((String) e[9]);
-//						p.setSubMenus(a33);
-//						a3.add(p);
-//					}
-//					
-	//
-////					FOR menu and submenu of menu id 400
-//				List<MixMenu> a44 = new ArrayList<MixMenu>();//For submenu of 400
-//				for(Object o:e44) {
-//					Object[] e = (Object[]) o;	
-//					MixMenu p = new MixMenu();
-//					p.setMenuItemId( (BigInteger) e[0]);
-//					p.setMenuItemDesc((String) e[1]);
-//					p.setMenuId((BigInteger) e[2]);
-//					p.setMCreate((String) e[3]);
-//					p.setMVisible((String) e[4]);
-//					p.setMEdit((String) e[5]);
-//					p.setMQuery((String) e[6]);
-//					p.setMDelete((String) e[7]);
-//					p.setMainMenuActionName((String) e[8]);
-//					p.setMainMenuIconName((String) e[9]);
-//					a44.add(p);
-//				}
-	//
-//					List<MixMenu> a4 = new ArrayList<MixMenu>();// for menu of 200
-//					for(Object o:e4) {
-//						Object[] e = (Object[]) o;	
-//						MixMenu p = new MixMenu();
-//						p.setMenuItemId( (BigInteger) e[0]);
-//						p.setMenuItemDesc((String) e[1]);
-//						p.setMenuId((BigInteger) e[2]);
-//						p.setMCreate((String) e[3]);
-//						p.setMVisible((String) e[4]);
-//						p.setMEdit((String) e[5]);
-//						p.setMQuery((String) e[6]);
-//						p.setMDelete((String) e[7]);
-//						p.setMainMenuActionName((String) e[8]);
-//						p.setMainMenuIconName((String) e[9]);
-//						p.setSubMenus(a44);
-//						a4.add(p);
-//					}
-//				
-	//
-//				
-	//
-////					FOR menu and submenu of menu id 500
-	//
-//				List<MixMenu> a55 = new ArrayList<MixMenu>();//for submenu of 500
-//				for(Object o:Gr) {
-//					Object[] e = (Object[]) o;	
-//					MixMenu p = new MixMenu();
-//					p.setMenuItemId( (BigInteger) e[0]);
-//					p.setMenuItemDesc((String) e[1]);
-//					p.setMenuId((BigInteger) e[2]);
-//					p.setMCreate((String) e[3]);
-//					p.setMVisible((String) e[4]);
-//					p.setMEdit((String) e[5]);
-//					p.setMQuery((String) e[6]);
-//					p.setMDelete((String) e[7]);
-//					p.setMainMenuActionName((String) e[8]);
-//					p.setMainMenuIconName((String) e[9]);
-//					a55.add(p);
-//				}
-	//
-//					List<MixMenu> a5 = new ArrayList<MixMenu>();//for menu of 500
-//					for(Object o:Li) {
-//						Object[] e = (Object[]) o;	
-//						MixMenu p = new MixMenu();
-//						p.setMenuItemId( (BigInteger) e[0]);
-//						p.setMenuItemDesc((String) e[1]);
-//						p.setMenuId((BigInteger) e[2]);
-//						p.setMCreate((String) e[3]);
-//						p.setMVisible((String) e[4]);
-//						p.setMEdit((String) e[5]);
-//						p.setMQuery((String) e[6]);
-//						p.setMDelete((String) e[7]);
-//						p.setMainMenuActionName((String) e[8]);
-//						p.setMainMenuIconName((String) e[9]);
-//						p.setSubMenus(a55);
-//						a5.add(p);
-//					}
-//					
-////					FOR menu and submenu of menu id 600
-	//
-//					List<MixMenu> a66 = new ArrayList<MixMenu>();//For submenu of 600
-//					for(Object o:e66) {
-//						Object[] e = (Object[]) o;	
-//						MixMenu p = new MixMenu();
-//						p.setMenuItemId( (BigInteger) e[0]);
-//						p.setMenuItemDesc((String) e[1]);
-//						p.setMenuId((BigInteger) e[2]);
-//						p.setMCreate((String) e[3]);
-//						p.setMVisible((String) e[4]);
-//						p.setMEdit((String) e[5]);
-//						p.setMQuery((String) e[6]);
-//						p.setMDelete((String) e[7]);
-//						p.setMainMenuActionName((String) e[8]);
-//						p.setMainMenuIconName((String) e[9]);
-//						a66.add(p);
-//					}
-	//
-//						List<MixMenu> a6 = new ArrayList<MixMenu>();// for menu of 600
-//						for(Object o:e6) {
-//							Object[] e = (Object[]) o;	
-//							MixMenu p = new MixMenu();
-//							p.setMenuItemId( (BigInteger) e[0]);
-//							p.setMenuItemDesc((String) e[1]);
-//							p.setMenuId((BigInteger) e[2]);
-//							p.setMCreate((String) e[3]);
-//							p.setMVisible((String) e[4]);
-//							p.setMEdit((String) e[5]);
-//							p.setMQuery((String) e[6]);
-//							p.setMDelete((String) e[7]);
-//							p.setMainMenuActionName((String) e[8]);
-//							p.setMainMenuIconName((String) e[9]);
-//							p.setSubMenus(a66);
-//							a6.add(p);
-//						}
-//					
-//					
-//						list.add(a1);
-//						list.add(a2);
-//						list.add(a3);
-//						list.add(a4);
-//						list.add(a5);
-//						list.add(a6);
-//					return new ResponseEntity<>(list,HttpStatus.OK);
-	//
-//				}
-	//
-	//
-////			GET MENU AND SUBMENU of MENU DETAILS
-//			@GetMapping("/Load_MenuNew")
-//			public ResponseEntity<?> loadmenuDetail(){
-//				List<Object> list = new ArrayList<>();
-//				
-//				MenuDet a1 = menuDetRepository.findequalto100();
-//				List<MenuDet> a11 = menuDetRepository.findgreaterthan100();
-//				a1.setSubMenus(a11);
-//				
-//				MenuDet a2 = menuDetRepository.findequalto200();
-//				List<MenuDet> a22 = menuDetRepository.findgreaterthan200();
-//				a2.setSubMenus(a22);
-//				
-//				MenuDet a3 = menuDetRepository.findequalto300();
-//				List<MenuDet> a33 = menuDetRepository.findgreaterthan300();
-//				a3.setSubMenus(a33);
-//				
-////				MenuDet a4 = menuDetRepository.findequalto400();
-////				List<MenuDet> a44 = menuDetRepository.findgreaterthan400();
-////				a4.setSubMenus(a44);
-//				
-//				MenuDet a5 = menuDetRepository.findequalto500();
-//				List<MenuDet> a55 = menuDetRepository.findgreaterthan500();
-//				a5.setSubMenus(a55);
-//				
-////				MenuDet a6 = menuDetRepository.findequalto600();
-////				List<MenuDet> a66 = menuDetRepository.findgreaterthan600();
-////				a6.setSubMenus(a66);
-	//
-//				list.add(a1);
-//				list.add(a2);
-//				list.add(a3);	
-////				list.add(a4);	
-//				list.add(a5);	
-////				list.add(a6);	
-	//
-//				
-//				return new ResponseEntity<>(list,HttpStatus.OK);
-	//
-//			}
-	//
-	//
-////			GET SUBMENU BY MENU ID
-	//
-//			@GetMapping("/menu_loading/{menu_id}")
-//			public ResponseEntity<?> getmenubyid(@PathVariable Long menu_id){
-//			List<MenuDet> M = menuDetRepository.findAllById(menu_id);
-//			if(menu_id != null) {
-//				if(menu_id==100) {
-//					return new ResponseEntity<>((List<MenuDet>) menuDetRepository.findgreaterthan100(), HttpStatus.OK);
-	//
-//				}
-//				if(menu_id==200) {
-//					return new ResponseEntity<>((List<MenuDet>) menuDetRepository.findgreaterthan200(), HttpStatus.OK);
-	//
-//				}
-//				if(menu_id==300) {
-//					return new ResponseEntity<>((List<MenuDet>) menuDetRepository.findgreaterthan300(), HttpStatus.OK);
-	//
-//				}
-//				if(menu_id==400) {
-//					return new ResponseEntity<>((List<MenuDet>) menuDetRepository.findgreaterthan400(), HttpStatus.OK);
-	//
-//				}
-//				if(menu_id==500) {
-//					return new ResponseEntity<>((List<MenuDet>) menuDetRepository.findgreaterthan500(), HttpStatus.OK);
-	//
-//				}
-//				if(menu_id==600) {
-//					return new ResponseEntity<>((List<MenuDet>) menuDetRepository.findgreaterthan600(), HttpStatus.OK);
-	//
-//				}
-//			}	
-//				return new ResponseEntity<>(M,HttpStatus.OK);		
-//			}
-	//
 
 }

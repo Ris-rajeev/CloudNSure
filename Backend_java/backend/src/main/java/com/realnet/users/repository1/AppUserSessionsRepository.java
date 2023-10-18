@@ -15,6 +15,6 @@ public interface AppUserSessionsRepository extends JpaRepository<AppUserSessions
 	
 	List<AppUserSessions> findByUserId(AppUser userId);
 	
-	@Query(value = "SELECT * FROM realnet_CNSBE.sec_user_sessions where session_id = ?1",nativeQuery = true)
+	@Query(value = "SELECT * FROM sec_user_sessions where session_id = ?1",nativeQuery = true)
 	AppUserSessions findBySessionId(String sessionId);
 }

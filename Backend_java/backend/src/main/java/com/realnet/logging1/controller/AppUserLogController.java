@@ -79,7 +79,7 @@ public class AppUserLogController {
 				AppUserLog p =new AppUserLog();
 				p.setUserName(a.getUsername());
 				p.setGenerateLog("Y");
-				p.setLogFileName(a.getUsername()+".log");
+				p.setLogFileName(a.getUsername()+ut1+".log");
 				p.setLogLevel("info");
 				if(mode!=null) {
 					p.setLogLevel(mode);
@@ -177,30 +177,7 @@ public class AppUserLogController {
 		};
 		return new ResponseEntity<>(a1,HttpStatus.OK);
 	}
-	
-//	@GetMapping("/downloadLog/{filename}")
-//	public ResponseEntity<?> sendFile(@PathVariable("filename")String filename,HttpServletRequest request) throws Exception{
-//	//	AppUser a = appUserServiceImpl.getByUserName(username).orElse(null);
-//				Resource resource = loggingService.loadFileAsResource(filename);
-//				if(resource!=null) {
-//					String contentType = null;
-//			        try {
-//			            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-//			        } catch (IOException ex) {
-//			            throw new Exception("Could not find log file for file: "+filename);
-//			        }
-//			        // Fallback to the default content type if type could not be determined
-//			        if(contentType == null) {
-//			            contentType = "application/octet-stream";
-//			        }
-//			        return ResponseEntity.ok()
-//			                .contentType(MediaType.parseMediaType(contentType))
-//			                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-//			                .body(resource);
-//				}else {
-//					return new ResponseEntity<>("File could not be loaded",HttpStatus.BAD_REQUEST);
-//				}
-//		}
+
 
 
 }

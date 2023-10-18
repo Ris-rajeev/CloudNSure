@@ -1,5 +1,7 @@
 package com.realnet.users.entity1;
 
+import java.util.Set;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -19,6 +21,6 @@ public class SignUp {
 	@Size(min = 6, max = 40)
 	private String password;
 
-	private String confirm_password;
+	private String confirm_passwordS;
 
 }

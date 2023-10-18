@@ -30,10 +30,7 @@ public class AppUserRoleServiceImpl {
 		return appUserRoleRepository.findById(id);
 	}
 	public AppUserRole addOne(AppUserRole appUserRole) {
-//		String createdBy = appUserServiceImpl.getLoggedInUser().getUsername();
-//		String updatedBy = createdBy;
-//		appUserRole.setCreateby(createdBy);
-//		appUserRole.setUpdateby(updatedBy);
+
 		return appUserRoleRepository.save(appUserRole);
 	}
 	public AppUserRole updateOne(AppUserRole appUserRole) {

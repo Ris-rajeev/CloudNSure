@@ -1,7 +1,6 @@
 package com.realnet.users.service1;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -115,28 +114,21 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 				o.setDepartmentCodeString(o.getDepartmentCode().getDepartmentCode());
 				o.setDepartmentCode(null);
 			}
-//			if(o.getStatus()!=null) {
-//				String s = getStatus("USRST",o.getStatus());
-//				if(s!=null) {
-//					o.setStatus(s);
-//				}
-//			}
+
 		}
 		return l;
 	}
 
 	public AppUser addOneUser(Registration reg) {
-		AppUser appUser = findUserByEmail(reg.getEmail());
-		if (reg.getNew_password().equals(reg.getConfirm_password())) {
+		AppUser appUser = new AppUser();
+		if (reg.getNew_password().equals(reg.getConfirm_passwordS())) {
 
-//			appUser.setEmail(reg.getEmail());
+			appUser.setEmail(reg.getEmail());
 			appUser.setUsername(reg.getEmail());
-
 			AppUserRole r = null;
 			if (reg.getUsrGrpId() != null) {
 				r = appUserRoleRepository.findById(reg.getUsrGrpId()).orElse(null);
 			}
-
 			if (r != null) {
 				appUser.setUsrGrp(r);
 			}
@@ -154,7 +146,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 			Set<Role> strRoles = appUser.getRoles();
 			Set<Role> roles = new HashSet<>();
 
-			if (strRoles.isEmpty()) {
+			if (strRoles == null) {
 				String role1 = "ROLE_Developer";
 				Role userRole = roleRepo.findByName(role1);
 				roles.add(userRole);
@@ -163,7 +155,6 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 		}
 
 		AppUser save = appUserRepository.save(appUser);
-//		System.out.println("saved user is .." + save);
 
 		return save;
 	}
@@ -173,29 +164,21 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 		appUser.setUsername(ppUser.getUsername());
 		appUser.setFullName(ppUser.getFullName());
 		appUser.setEmail(ppUser.getEmail());
-		appUser.setUserPassw(bcryptEncoder.encode(ppUser.getPassword()));
-		appUser.setChangePassw(ppUser.getPassword());
+		appUser.setUserPassw(ppUser.getPassword());
 		appUser.setShortName(ppUser.getFirstName());
 		appUser.setUsrGrpName(ppUser.getRole());
 		appUser.setAbout(ppUser.getAbout());
-//		appUser.setProvider( ppUser.getProvider().name());
+		appUser.setProvider(ppUser.getProvider().name());
 		appUser.setCountry(ppUser.getCountry());
 		appUser.setBlocked(false);
 		appUser.setIsComplete(true);
 		appUser.setActive(true);
 
 		appUser.setChecknumber(ppUser.getChecknumber());
-		appUser.setUsrGrp(appUserRoleRepository.findById(42l).get());
 		Sys_Accounts account = sysAccountRepo.findByEmail(ppUser.getEmail());
 		if (account != null) {
 			appUser.setAccount(account);
-		} else {
-			appUser.setAccount(sysAccountRepo.findById(1l).get());
-
 		}
-
-		appUser.setUsrGrp(appUserRoleRepository.findById(46l).orElse(null));
-
 		Set<Role> roles = new HashSet<>();
 		String role1 = "ROLE_ADMIN";
 		Role userRole = roleRepo.findByName(role1);
@@ -323,7 +306,7 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 	public AppUser getLoggedInUser() {
 		String loggedInUserName = this.getLoggedInUserEmail();
 		Optional<AppUser> user = appUserRepository.findByUsername(loggedInUserName);
-//		log.info("getLoggedInUser() : {} ", user.get());
+		log.info("getLoggedInUser() : {} ", user.get());
 		return user.get();
 	}
 
@@ -538,16 +521,6 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 		passwordTokenRepository.save(myToken);
 	}
 
-//	resend otp for verification
-	public void resendotp(int otp, String email) {
-		AppUser user = findUserByEmail(email);
-
-		user.setRandom_no(String.valueOf(otp));
-
-		appUserRepository.save(user);
-
-	}
-
 	// ADD USER VIA ADMIN
 	public void adduserviaadmin(AppUser user, String token, String email, Long account_id) {
 		Sys_Accounts accounts = sysAccountRepo.findById(account_id).orElseThrow(null);
@@ -562,23 +535,14 @@ public class AppUserServiceImpl implements UserDetailsService, AppUserService {
 	}
 
 	// ADD GUEST VIA ADMIN
-	public void addguestviaadmin(AppUser user, String token, String email, Long account_id) {
+	public void addguestviaadmin(AppUser user, String token, String email, Long account_id, Long access_duration) {
 		Sys_Accounts accounts = sysAccountRepo.findById(account_id).orElseThrow(null);
 
 		user.setRandom_no(token);
 		user.setUsername(email);
 		user.setEmail(email);
 		user.setAccount(accounts);
-//		user.setAccess_duration(access_duration);
-//
-//		Calendar c = Calendar.getInstance();
-//		c.setTime(new Date());
-//		c.add(Calendar.DATE, access_duration);
-//
-////		SimpleDateFormat dateFormat = new SimpleDateFormat();
-////		String format = dateFormat.format(c.getTime());
-//
-//		user.setAccess_till_date(c.getTime());
+		user.setAccess_duration(access_duration);
 		appUserRepository.save(user);
 
 	}

@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.realnet.SuReops.entity.FileDetails;
-import com.realnet.SuReops.entity.GetFile;
-import com.realnet.fnd.entity.Error;
-import com.realnet.fnd.entity.ErrorPojo;
+
 import com.realnet.logging1.entity.AppUserLog;
 import com.realnet.logging1.repository.AppUserLogginRepository;
 import com.realnet.logging1.service.LoggingService;
@@ -74,49 +71,5 @@ public class AppUserLogController2 {
 		}
 	}
 
-	@GetMapping("/fileread/{id}")
-	public ResponseEntity<?> fileread(@PathVariable Long id) {
-
-		AppUserLog param = logginRepository.findById(id).orElseThrow(null);
-
-		String staticPath =File.separator+"logs"+File.separator+ param.getLogFileName(); // in a same folder
-
-
-		// projectPath
-		String filePath = projectPath.concat(staticPath);
-
-		StringBuilder code = new StringBuilder();
-		File file = null;
-		try {
-			file = new File(filePath);
-			String fileName = file.getName();
-			log.info("Static File Name : {}", fileName);
-
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
-			String line;
-			while ((line = br.readLine()) != null) {
-				code.append(line + "\n");
-			}
-			fr.close();
-			br.close();
-		} catch (IOException e) {
-			log.debug("IO Exception Handled...");
-			log.error(e.getMessage());
-			e.getMessage();
-			ErrorPojo errorPojo = new ErrorPojo();
-			Error error = new Error();
-			error.setTitle(Constant.FILE_OPERATION_API_TITLE);
-			error.setMessage(Constant.FILE_NOT_FOUND_EXCEPTION);
-			errorPojo.setError(error);
-			return new ResponseEntity<ErrorPojo>(errorPojo, HttpStatus.EXPECTATION_FAILED);
-		}
-		String string = code.toString();
-		String codee = code.substring(0, code.lastIndexOf("\n")); // remove last line break
-		FileDetails fileDetails = new FileDetails();
-		fileDetails.setId(id);
-		fileDetails.setText(codee);
-		return new ResponseEntity<FileDetails>(fileDetails, HttpStatus.OK);
-	}
-
+	
 }

@@ -7,23 +7,23 @@ import lombok.Data;
 
 @Data
 public class Registration {
-
+	
 	private String first_name;
 
 	private String last_name;
 
 	private Long mob_no;
-
+	
 	private String email;
-
-	private Long account_id;
-
-	private Long usrGrpId;
 
 	@NotBlank
 	@Size(min = 6, max = 40)
 	private String new_password;
+	
+	private Long account_id;
+	
+	private Long usrGrpId;
 
-	private String confirm_password;
+	private String confirm_passwordS;
 	private String accesstype;
 }

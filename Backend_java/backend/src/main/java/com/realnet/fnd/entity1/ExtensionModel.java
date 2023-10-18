@@ -1,11 +1,9 @@
 package com.realnet.fnd.entity1;
 
 import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
 
 import lombok.Data;
 
-@MappedSuperclass
 @Data
 public class ExtensionModel {
 
@@ -22,19 +20,19 @@ public class ExtensionModel {
 	private String ext9;
 	private String ext10;
 	
-//	@Column(length = 4000)
+	@Column(length = 4000)
 	private String bigext1;
 	
-//	@Column(length = 4000)
+	@Column(length = 4000)
 	private String bigext2;
 	
-//	@Column(length = 4000)
+	@Column(length = 4000)
 	private String bigext3;
 	
-//	@Column(length = 4000)
+	@Column(length = 4000)
 	private String bigext4;
 	
-//	@Column(length = 4000)
+	@Column(length = 4000)
 	private String bigext5;
 	
 	private String flex1;
