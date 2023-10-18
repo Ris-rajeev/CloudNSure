@@ -24,7 +24,7 @@ async function executeQuery(sql, values) {
   }
 }
 
-var usr_grp_from_login
+let usr_grp_from_login
 
 const login = (req, res) => {
   const body = req.body
