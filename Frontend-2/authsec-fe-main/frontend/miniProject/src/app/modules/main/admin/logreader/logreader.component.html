@@ -1,0 +1,14 @@
+<div class="container">
+  <h3 style="text-align: center;"><b>FILE EDITOR</b></h3>
+  <div class="clr-row">
+  </div>
+    <div class="clr-col-12" style="margin-top: 50; border: 1px solid black; height: 50vh;" >
+      <button style="float: right; margin-top: -42px;" class="btn btn-primary"
+        (click)="saveTextIntoFile()">Update</button>
+       <ngx-codemirror     #codemirror
+        [options]="codeMirrorOptions"
+        [(ngModel)]="fileData.text"
+       >
+      </ngx-codemirror>
+  </div>
+</div>

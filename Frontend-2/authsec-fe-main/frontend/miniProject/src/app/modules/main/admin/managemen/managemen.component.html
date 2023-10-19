@@ -1,0 +1,118 @@
+
+<div class="clr-row">
+  <div class="clr-col-8" style="display:flex ">
+    <h3><b>Manage Members</b> </h3>
+    <div style="margin-top:27px ; position: relative;margin-left: 30px;">
+      <clr-icon  shape="search"></clr-icon>
+<input placeholder="Search current members" type="text" name="search" [(ngModel)]="search"  style="margin-right: 30px;width: 241px; background-color: transparent; padding-left: 8px;"/>
+    </div>
+
+  </div>
+  <!-- <div style="margin-top:27px ; position: relative;">
+
+  </div> -->
+  <div class="clr-col-4" style="text-align: right;">
+        <button class="btn btn-outline"  (click)="onExport()">
+      <clr-icon shape="export"></clr-icon> Export Member List
+    </button>
+    <button id="add" class="btn btn-primary"  (click)="goToAdd()">
+      <clr-icon shape="plus"></clr-icon>Invite People
+    </button>
+
+  </div>
+</div>
+
+<!-- <div class="td"><input type="text" placeholder="Search current members" required style=" width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;"></div> -->
+
+<clr-datagrid [clrDgLoading]="loading"  >
+  <clr-dg-placeholder><clr-spinner [clrMedium]="true">Loading ...</clr-spinner></clr-dg-placeholder>
+
+  <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+    Name
+  </ng-container></clr-dg-column>
+  <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+    Account Type
+  </ng-container></clr-dg-column>
+  <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+    Billing Status
+  </ng-container></clr-dg-column>
+  <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+    Aunthentication
+  </ng-container></clr-dg-column>
+  <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+    Actions
+  </ng-container></clr-dg-column>
+
+      <clr-dg-row *clrDgItems="let user of allteam| filter:search;let i = index" [clrDgItem]="user">
+        <clr-dg-cell ><img class="avatar" src="assets/images/profile-icon.png" alt=""  height="50px">
+        {{user.member_name}}<br>{{user.name}}{{user.email}}</clr-dg-cell>
+        <clr-dg-cell><clr-icon shape="minus"></clr-icon>{{user.description}}</clr-dg-cell>
+        <clr-dg-cell >{{user.status}} </clr-dg-cell>
+        <clr-dg-cell ></clr-dg-cell>
+        <clr-dg-cell > <clr-icon shape="ellipsis-horizontal"></clr-icon>
+        </clr-dg-cell>
+          </clr-dg-row>
+  <clr-dg-footer>
+    <clr-dg-pagination #pagination [clrDgPageSize]="10">
+      <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">data</clr-dg-page-size>
+      {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+      of {{pagination.totalItems}} data
+    </clr-dg-pagination>
+  </clr-dg-footer>
+</clr-datagrid>
+
+<clr-modal [(clrModalOpen)]="modalteam" [clrModalSize]="'lg'" [clrModalStaticBackdrop]="true">
+  <h5 class="modal-title">Add A Members To Team</h5>
+  <div class="modal-body">
+
+     <form [formGroup]="teamForm">
+      <clr-datagrid [clrDgLoading]="loading"  >
+      <clr-dg-placeholder><clr-spinner [clrMedium]="true">Loading ...</clr-spinner></clr-dg-placeholder>
+
+      <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+        Name
+      </ng-container></clr-dg-column>
+      <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+        Account Type
+      </ng-container></clr-dg-column>
+      <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+        Billing Status
+      </ng-container></clr-dg-column>
+      <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+        Aunthentication
+      </ng-container></clr-dg-column>
+      <clr-dg-column > <ng-container *clrDgHideableColumn="{hidden: false}">
+        Actions
+      </ng-container></clr-dg-column>
+
+
+          <clr-dg-row *clrDgItems="let user of allacciduser;let i = index" [clrDgItem]="user">
+            <clr-dg-cell ><img class="avatar" src="assets/images/profile-icon.png" alt=""  height="50px">
+            {{user.fullName}}<br>{{user.username}}<clr-icon shape="dot-circle"></clr-icon>{{user.email}}</clr-dg-cell>
+            <clr-dg-cell><clr-icon shape="minus"></clr-icon>{{user.description}}</clr-dg-cell>
+            <clr-dg-cell >{{user.status}} </clr-dg-cell>
+            <clr-dg-cell ></clr-dg-cell>
+            <clr-dg-cell (click)="useradd(user)"> <button class="btn btn-primary">Add</button>
+            </clr-dg-cell>
+              </clr-dg-row>
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">data</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+          of {{pagination.totalItems}} data
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="modalteam = false">Cancel</button>
+      <button type="submit"  class="btn btn-primary" >Add</button>
+      </div> -->
+    </form>
+  </div>
+</clr-modal>

@@ -1,0 +1,358 @@
+<ol class="breadcrumb breadcrumb-arrow font-trirong">
+  <li><a href="javascript://" [routerLink]="['/cns-portal/dashboard/order']"><clr-icon shape="home"></clr-icon></a></li>
+  <li><a href="javascript://"><clr-icon shape="crown"></clr-icon>Super Admin</a></li>
+  <li><a href="javascript://"> Query</a></li>
+</ol>
+
+
+<div class="container">
+
+
+       <div class="clr-row">
+        <div class="clr-col-8">
+            <h3>SQL Worksheet-
+              <ng-template #no>   <b>connection name</b></ng-template>
+             <b *ngIf="selecteddatabase;else no" style="color:#0072a3 ;">{{selecteddatabase}}</b>
+       <span class="label label-light-green p7" style="margin-top: .4em; display: inline; cursor: pointer;" (click)="opendatabsemo()">switch</span>
+       <span class="label label-light-green p7" style="margin-top: .4em; display: inline; cursor: pointer;" (click)="opencopym()">Add New</span>
+      </h3>
+
+        </div>
+
+        <div class="clr-col-4" style="text-align: right;">
+          <button mat-raised-button
+          class="btn btn-primary"
+          (click)="addTab(selectAfterAdding.checked)">
+          <clr-icon shape="plus"></clr-icon> new tab
+  </button>
+  <span #selectAfterAdding>  </span>
+        </div>
+    </div>
+
+      <clr-tabs [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+        <clr-tab *ngFor="let tab of tabs; let index = index" [label]="tab">
+          <button clrTabLink>{{tab}}{{index+1}}</button>
+          <clr-tab-content *clrIfActive>
+
+            <div class="clr-row">
+              <div class="clr-col-8">
+                  <!-- <h5> Contents for {{tab}}{{index+1}} tab </h5> -->
+              </div>
+
+              <div class="clr-col-4" style="text-align: right;">
+                <button mat-raised-button
+            class="btn btn-primary"
+            [disabled]="tabs.length === 1"
+            (click)="removeTab(index)">
+            <clr-icon shape="trash"></clr-icon> {{tab}}{{index+1}}
+    </button>
+              </div>
+          </div>
+            <div class="container">
+              <div class="progressform">
+                <div class="clr-row">
+                  <div class="clr-col-md-4 clr-col-sm-12">
+                    <label for="tags">
+                      <span class="label label-light-green p7" style="margin-top: .4em; display: inline; cursor: pointer;" (click)="opentablemod()">Add Table</span>
+                    </label>
+                    <textarea type="text" id="sql_query" name="sql_query" cols="10" rows="3"   placeholder="select table here"
+                   name="selectedtable" [(ngModel)]="selectedtable" >
+                    </textarea>
+                  </div>
+                  <div class="clr-col-md-4 clr-col-sm-12">
+                    <label for="tags" class="req"> <span class="label label-light-green p7" style="margin-top: .4em; display: inline; cursor: pointer;"  (click)="opentcolmod()" >Add Select String</span></label>
+                    <p *ngIf="msg" style="color: red;">{{msg}} </p>
+                    <textarea type="text" id="sql_query" name="sql_query" cols="10" rows="3"  placeholder="select string here"
+                    name="selectedcol" [(ngModel)]="selectedcol" >
+                    </textarea>
+                  </div>
+                  <div class="clr-col-md-4 clr-col-sm-12">
+                    <label for="tags" class="req">
+                      <span class="label label-light-green p7" style="margin-top: .4em; display: inline; cursor: pointer;"  (click)="opentcolmod1()" >Add Condition</span>
+                    </label> <p *ngIf="msg" style="color: red;">{{msg}} </p>
+                    <textarea type="text" id="sql_query" name="sql_query" cols="10" rows="3"  placeholder="select string here"
+                    name="selectedcol" [(ngModel)]="selectedcol1" >
+                    </textarea>
+                  </div>
+                </div>
+                <form [formGroup]="entryForm" >
+                <div class="clr-row">
+                  <div class="clr-col-md-6 clr-col-sm-12">
+                    <label for="tags"> <span class="label label-light-green p7" style="margin-top: .4em; display: inline; cursor: pointer;" (click)="openquerymod()">Add Query</span>
+                    </label>
+                    <textarea type="text" id="sql_query" name="sql_query" formControlName="sql_query"  cols="10" rows="3"
+                    [(ngModel)]="selectedquery" placeholder="Enter Query here">
+                   </textarea>
+                  </div>
+                </div></form>
+                <span style="float: right;">
+                  <button type="submit" class="btn btn-primary"(click)="savequery()">SAVE QUERY</button>
+                  <button type="submit" class="btn btn-primary" (click)="onSubmit()">RUN</button>
+                  </span><br>
+                  <div >
+                    <h4 style="font-weight: 300;display: inline;">Response</h4>
+                  </div>
+                  <hr>
+                  <div class="clr-row" style="padding-top: 10px;">
+
+                 <!-- <ngx-datatable
+                     style='width:fit-content;'
+                     [rows]="rows"
+                     [columns]="columns"
+                     class="bootstrap"
+                    [loadingIndicator]="loadingIndicator"
+                    [headerHeight]="40"
+                    [summaryRow]="true"
+                    [summaryPosition]="'bottom'"
+                    [scrollbarV]="true"
+                    [limit]="10"
+                    [rowHeight]="40"
+                      [reorderable]="reorderable" >
+                 </ngx-datatable> -->
+                  </div>
+              </div>
+</div><br>
+          </clr-tab-content>
+        </clr-tab>
+      </clr-tabs>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+    <th *ngFor="let co of getHeaders();let i=index">{{co}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of rows">
+      <td *ngFor="let key of getHeaders()">{{item[key]}}</td>
+    </tr>
+  </tbody>
+</table>
+
+  <!-- <clr-datagrid [clrDgLoading]="loading">
+    <clr-dg-placeholder><ng-template #loadingSpinner><clr-spinner>Loading ... </clr-spinner></ng-template>
+      <div *ngIf="errorco;else loadingSpinner">{{errorco}}</div></clr-dg-placeholder>
+    <clr-dg-column  *ngFor="let co of getHeaders()">
+      {{co}}
+    </clr-dg-column>
+      <clr-dg-row  *ngFor="let item of rows">
+      <clr-dg-cell *ngFor="let key of getHeaders()">{{item[key]}}</clr-dg-cell>
+       </clr-dg-row>
+    <clr-dg-footer>
+      <clr-dg-pagination #pagination [clrDgPageSize]="5">
+        <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Record per page</clr-dg-page-size>
+        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+        of {{pagination.totalItems}} Records
+      </clr-dg-pagination>
+    </clr-dg-footer>
+  </clr-datagrid> -->
+
+<clr-modal [(clrModalOpen)]="database" [clrModalSize]="'lg'">
+  <h3 class="modal-title"><b>Select Database</b></h3>
+  <div class="modal-body">
+    <div class="clr-row">
+      <div class="clr-col-md-12 clr-col-sm-12" style="margin-top: 8px;">
+          <input id="data" type="text" placeholder="Enter search Criteria" class="clr-input" name="searchtable" [(ngModel)]="searchdatabase">
+       </div>
+      </div>
+     <clr-datagrid [clrDgLoading]="loading">
+      <clr-dg-placeholder><ng-template #loadingSpinner><clr-spinner>Loading ... </clr-spinner></ng-template>
+        <div *ngIf="errorco;else loadingSpinner">{{errorco}}</div></clr-dg-placeholder>
+      <clr-dg-column [clrDgField]="'id'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        No
+      </ng-container></clr-dg-column>
+      <clr-dg-column [clrDgField]="'conn_string'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        Conn_string
+      </ng-container></clr-dg-column>
+      <clr-dg-column [clrDgField]="'username'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        Username
+      </ng-container></clr-dg-column>
+      <clr-dg-column [clrDgField]="'password'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        Password
+      </ng-container></clr-dg-column>
+      <clr-dg-column [clrDgField]="'driver_class_name'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        Driver_class_name
+      </ng-container></clr-dg-column>
+        <clr-dg-row  *ngFor="let user of databaselist | filter:searchdatabase;let i = index">
+        <clr-dg-cell>{{i+1}}</clr-dg-cell>
+        <clr-dg-cell  style="color: rgb(108, 108, 194);" (click)="databasename(user)">{{user.conn_string}}</clr-dg-cell>
+        <clr-dg-cell>{{user.username}}</clr-dg-cell>
+        <clr-dg-cell>{{user.password}}</clr-dg-cell>
+        <clr-dg-cell>{{user.driver_class_name}}</clr-dg-cell>
+   </clr-dg-row>
+
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Record per page</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+          of {{pagination.totalItems}} Records
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="table" [clrModalSize]="'lg'">
+  <h3 class="modal-title"><b>Select From  Table List:</b></h3>
+  <div class="modal-body">
+    <div class="clr-row">
+      <div class="clr-col-md-12 clr-col-sm-12" style="margin-top: 8px;">
+          <input id="data" type="text" placeholder="Enter search Criteria" class="clr-input" name="searchtable" [(ngModel)]="searchtable">
+       </div>
+      </div>
+     <clr-datagrid [clrDgLoading]="loading">
+      <clr-dg-placeholder><ng-template #loadingSpinner><clr-spinner>Loading ... </clr-spinner></ng-template>
+        <div *ngIf="errortb;else loadingSpinner">{{errortb}}</div></clr-dg-placeholder>
+      <clr-dg-column [clrDgField]="'id'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        No
+      </ng-container></clr-dg-column>
+      <clr-dg-column [clrDgField]="'tableList'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        Table Name
+      </ng-container></clr-dg-column>
+        <clr-dg-row  *ngFor="let user of tableList | searchFilter:searchtable;let i = index">
+        <clr-dg-cell>{{i+1}}</clr-dg-cell>
+        <clr-dg-cell  style="color: rgb(108, 108, 194);" (click)="tablename(user)">{{user}}</clr-dg-cell>
+   </clr-dg-row>
+
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Record per page</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+          of {{pagination.totalItems}} Records
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="col" [clrModalSize]="'lg'">
+  <h3 class="modal-title"><b>Select From Tables Columns List:</b></h3>
+  <div class="modal-body">
+    <div class="clr-row">
+      <div class="clr-col-md-12 clr-col-sm-12" style="margin-top: 8px;">
+          <input id="data" type="text" placeholder="Enter search Criteria" class="clr-input" name="searchtable" [(ngModel)]="searchcol">
+       </div>
+      </div>
+     <clr-datagrid [clrDgLoading]="loading">
+      <clr-dg-placeholder><ng-template #loadingSpinner><clr-spinner>Loading ... </clr-spinner></ng-template>
+        <div *ngIf="errorcl;else loadingSpinner">{{errorcl}}</div></clr-dg-placeholder>
+      <clr-dg-column [clrDgField]="'id'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        No
+      </ng-container></clr-dg-column>
+      <clr-dg-column [clrDgField]="'tableList'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        Column Name
+      </ng-container></clr-dg-column>
+        <clr-dg-row  *ngFor="let user of collist | searchFilter:searchcol;let i = index">
+        <clr-dg-cell>{{i+1}}</clr-dg-cell>
+        <clr-dg-cell  style="color: rgb(108, 108, 194);" (click)="colname(user)">{{user}}</clr-dg-cell>
+   </clr-dg-row>
+
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Record per page</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+          of {{pagination.totalItems}} Records
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="col1" [clrModalSize]="'lg'">
+  <h3 class="modal-title"><b>Select From Tables Columns List:</b></h3>
+  <div class="modal-body">
+    <div class="clr-row">
+      <div class="clr-col-md-12 clr-col-sm-12" style="margin-top: 8px;">
+          <input id="data" type="text" placeholder="Enter search Criteria" class="clr-input" name="searchtable" [(ngModel)]="searchcol">
+       </div>
+      </div>
+     <clr-datagrid [clrDgLoading]="loading">
+      <clr-dg-placeholder><clr-spinner [clrMedium]="true">Loading ...</clr-spinner></clr-dg-placeholder>
+      <clr-dg-column [clrDgField]="'id'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        No
+      </ng-container></clr-dg-column>
+      <clr-dg-column [clrDgField]="'tableList'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        Column Name
+      </ng-container></clr-dg-column>
+        <clr-dg-row  *ngFor="let user of collist | searchFilter:searchcol;let i = index">
+        <clr-dg-cell>{{i+1}}</clr-dg-cell>
+        <clr-dg-cell  style="color: rgb(108, 108, 194);" (click)="colname1(user)">{{user}}</clr-dg-cell>
+   </clr-dg-row>
+
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Record per page</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+          of {{pagination.totalItems}} Records
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="query" [clrModalSize]="'lg'">
+  <h3 class="modal-title"><b>Select Query:</b></h3>
+  <div class="modal-body">
+    <div class="clr-row">
+      <div class="clr-col-md-12 clr-col-sm-12" style="margin-top: 8px;">
+          <input id="data" type="text" placeholder="Enter search Criteria" class="clr-input" name="searchtable" [(ngModel)]="searchquery">
+       </div>
+      </div>
+     <clr-datagrid [clrDgLoading]="loading">
+      <clr-dg-placeholder><clr-spinner [clrMedium]="true">Loading ...</clr-spinner></clr-dg-placeholder>
+      <clr-dg-column [clrDgField]="'id'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        No
+      </ng-container></clr-dg-column>
+      <clr-dg-column [clrDgField]="'query'"> <ng-container *clrDgHideableColumn="{hidden: false}">
+        Query
+      </ng-container></clr-dg-column>
+
+        <clr-dg-row  *ngFor="let user of querydata | filter:searchquery;let i = index">
+        <clr-dg-cell>{{i+1}}</clr-dg-cell>
+        <clr-dg-cell  style="color: rgb(108, 108, 194);" (click)="selectquery(user.sql_query)">{{user.sql_query}}</clr-dg-cell>
+
+   </clr-dg-row>
+
+      <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10">
+          <clr-dg-page-size [clrPageSizeOptions]="[10,20,50,100]">Record per page</clr-dg-page-size>
+          {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+          of {{pagination.totalItems}} Records
+        </clr-dg-pagination>
+      </clr-dg-footer>
+    </clr-datagrid>
+  </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="addmodal" [clrModalSize]="'lg'" [clrModalStaticBackdrop]="true">
+  <h3 class="modal-title"> Create New</h3>
+  <div class="modal-body">
+    <form [formGroup]="addForm" (ngSubmit)="onCreate()">
+      <div class="clr-row">
+        <div class="clr-col-md-6 clr-col-sm-12">
+          <label>Conn_String<span class="required-field">*</span></label>
+         <input type="text"  formControlName="conn_string" class="clr-input">
+        </div>
+        <div class="clr-col-md-6 clr-col-sm-12">
+          <label>Username<span class="required-field">*</span></label>
+         <input type="text"  formControlName="username" class="clr-input">
+        </div>
+        </div>
+        <div class="clr-row">
+        <div class="clr-col-md-6 clr-col-sm-12">
+          <label>Password<span class="required-field">*</span></label>
+         <input type="text"  formControlName="password" class="clr-input">
+        </div>
+        <div class="clr-col-md-6 clr-col-sm-12">
+          <label>Driver_class_name<span class="required-field">*</span></label>
+         <input type="text"  formControlName="driver_class_name" class="clr-input">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="addmodal = false">Cancel</button>
+        <button type="submit" class="btn btn-primary" >Add</button>
+        </div>
+</form>
+  </div>
+</clr-modal>

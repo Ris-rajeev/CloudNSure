@@ -1,0 +1,185 @@
+<h4 style="font-weight: 300;display: inline;"><b>New Connection</b></h4>
+<span class="label label-light-blue" style="display: inline;margin-left: 10px;">Add Mode</span><br>
+Define A connection to use in a job, that can calls APIs from another App.
+<!-- <span style="display: inline; float: right;"> <button id="add" class="btn btn-primary" ><clr-icon shape="plus" ></clr-icon>Import</button></span> -->
+<hr>
+
+
+
+
+
+
+
+
+<div class="container">
+
+
+
+
+  <!-- entry form-->
+  <form  [formGroup]="entryForm">
+    <div class="clr-row">
+      <div class="clr-col-md-4 clr-col-sm-12">
+        <label for="projectName">Connection Name</label>
+        <input id="projectName" type="text"  placeholder="Enter Connection Name"
+          class="clr-input" formControlName="connection_name">
+      </div>
+      <div class="clr-col-md-4 clr-col-sm-12">
+        <label for="description">Description (optional)</label>
+
+          <textarea  id="" cols="10" rows="2"  name="remarks"  placeholder="Enter Description" formControlName="description">
+          </textarea>
+
+      </div>
+      </div>
+
+
+
+
+
+      <!-- add field here -->
+      <div style="margin-top: 40px;">
+      <h4 style="font-weight: 300;display: inline;"> Default Settings</h4>
+</div>
+These configurations default.
+<hr>
+
+      <div class="clr-row">
+        <div class="clr-col-md-4 clr-col-sm-12">
+          <label for="technologyStack">Type</label>
+          <select  selected="null" class="clr-dropdown" formControlName="type">
+            <option value="null">Choose Type</option>
+            <option>No AUTH</option>
+            <option>API KEY</option>
+            <option>Bearer Token</option>
+            <option>Basic Oauth</option>
+            <option>Digest Auth</option>
+          </select>
+        </div>
+
+        <div class="clr-col-md-4 clr-col-sm-12">
+          <label for="description">Access Token</label>
+
+            <textarea  id="" cols="10" rows="2"  name=" remarks"  placeholder="Enter token" formControlName="access_token">
+            </textarea>
+
+        </div></div>
+<div class="clr-row">
+  <div class="clr-col-md-4 clr-col-sm-12">
+    <label for="projectPrefix">Client ID</label>
+    <input type="text"  placeholder="Enter Clientid" class="clr-input" formControlName="client_id">
+
+  </div>
+</div>
+
+<div class="clr-row">
+      <div class="clr-col-md-4 clr-col-sm-12">
+        <label for="projectPrefix"> Username</label>
+        <input type="text"  placeholder="Enter Database Username" class="clr-input" formControlName="username">
+
+      </div>
+
+      <div class="clr-col-md-4 clr-col-sm-12">
+        <label for="dbPassword"> Password</label>
+        <input type="text" placeholder="Enter Database Password" class="clr-input" formControlName="password">
+
+      </div>
+    </div>
+    <span style="float: right;">
+      <button type="submit" class="btn btn-primary" (click)="onSubmit()">SUBMIT</button>
+      </span>
+    </form>
+      <div style="margin-top: 40px;">
+        <h4 style="font-weight: 300;display: inline;">Generate Token</h4>
+
+  </div>
+  <hr>
+  <div class="clr-row">
+    <div class="clr-col-md-4 clr-col-sm-12">
+      <label for="description">Request Method</label>
+      <select  selected="null" class="clr-dropdown">
+        <option selected>GET</option>
+        <option>POST</option>
+        <option>PUT</option>
+        <option>PATCH</option>
+        <option>DELETE</option>
+        <option>COPY</option>
+      </select>
+    </div>
+    <div class="clr-col-md-4 clr-col-sm-12">
+      <label for="projectName">URL</label>
+      <input id="projectName" type="text"  placeholder="https://example.com"
+        class="clr-input">
+    </div>
+    </div>
+
+<div class="clr-row">
+  <div class="clr-col-md-4 clr-col-sm-12">
+    <label for="description">Body</label>
+
+      <textarea  id="" cols="10" rows="2"  name=" remarks"  placeholder="Enter body" >
+      </textarea>
+
+  </div>
+
+
+</div>
+
+  <div class="center" style="text-align: center;">
+    <button class="btn btn-primary" type="submit" (click)="onLogin()">Send</button>
+     <button type="submit" class="btn btn-primary">Use</button>
+  </div>
+
+
+<div style="margin-top: 40px;">
+  <h4 style="font-weight: 300;display: inline;">Test Connection</h4>
+
+</div>
+<hr>
+<div class="clr-row">
+  <div class="clr-col-md-4 clr-col-sm-12">
+    <label for="projectName">URL</label>
+    <input id="projectName" type="text"  placeholder="Enter Connection Name"
+      class="clr-input">
+  </div>
+  <div class="clr-col-md-4 clr-col-sm-12">
+    <label for="description">Method</label>
+    <select  selected="null" class="clr-dropdown">
+      <option selected>GET</option>
+      <option>POST</option>
+      <option>PUT</option>
+      <option>PATCH</option>
+      <option>DELETE</option>
+      <option>COPY</option>
+    </select>
+  </div>
+  </div>
+  <div class=clr-row>
+    <div class="clr-col-md-4 clr-col-sm-12">
+      <label for="description">Body</label>
+
+        <textarea  id="" cols="10" rows="2"  name=" remarks"  placeholder="Enter body">
+        </textarea>
+
+    </div>
+
+
+  </div>
+  <div style="float: right;">
+    <button type="submit" class="btn btn-primary">TEST</button>
+    </div>
+
+          <div style="margin-top: 40px;">
+            <h4 style="font-weight: 300;display: inline;">Response</h4>
+      </div>
+      <hr>
+      code
+      <span class="label success" style="background-color: green;color:white;">200</span><br>
+      <div class="clr-row" style="padding-top: 10px;">
+        <textarea  id="" cols="10" rows="10"  name=" remarks">
+        </textarea>
+
+      </div>
+
+
+</div>

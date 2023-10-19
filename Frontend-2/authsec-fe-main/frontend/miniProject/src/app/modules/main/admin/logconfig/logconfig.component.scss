@@ -1,0 +1,17 @@
+@import '../../../../../styles1.scss';
+
+input[type='checkbox']{
+  width: 14px !important;
+  height: 14px !important;
+  margin: 5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  outline: 1px solid gray;
+  box-shadow: none;
+  font-size: 0.8em;
+  text-align: center;
+  line-height: 1em;
+  background: yellow;
+}
