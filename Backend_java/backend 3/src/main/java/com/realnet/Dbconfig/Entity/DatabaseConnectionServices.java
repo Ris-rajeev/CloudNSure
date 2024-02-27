@@ -389,9 +389,6 @@ public class DatabaseConnectionServices {
 
 	public DynamoDbClient createDynamoDbClient(String accessKeyId, String secretAccessKey, String url, String region) {
 
-//		 accessKeyId="AKIAQMXNGR7W5BGSO2KD";
-//     	secretAccessKey="y8Pq2bdiZafmEyvxDilqkmqAfQQSLf3kcMJrhong";
-//     	url="http://13.233.70.96:8002";
 		return DynamoDbClient.builder().region(Region.AP_SOUTH_1) // Replace with your desired region
 				.credentialsProvider(
 						StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey)))
